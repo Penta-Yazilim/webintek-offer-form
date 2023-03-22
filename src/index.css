@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.absolute-center {
+  @apply absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%];
+}
+.flex-center {
+  @apply flex items-center justify-center;
+}
+.overflow-fix {
+  @apply [mask-image:_-webkit-radial-gradient(white,_black)];
+}
+.button {
+  @apply backface-hidden items-center relative overflow-hidden border-none isolate [mask-image:_-webkit-radial-gradient(white,_black)];
+}
+.text-editor {
+  @apply editor dark:editor-invert editor-strong:font-bold editor-headings:leading-normal editor-li:font-extralight list-disc marker:w-[10px] marker:h-[10px] marker:text-primary editor-li:leading-loose editor-li:text-lynch-500 editor-li:text-[20px] xl:editor-li:text-[18px] lg:editor-li:text-[16px] editor-headings:font-extralight editor-p:font-extralight editor-p:leading-loose editor-p:text-lynch-500 editor-p:text-[20px] xl:editor-p:text-[18px] lg:editor-p:text-[16px] editor-p:tracking-wide editor-h1:text-[2.5em] xl:editor-h1:text-[2.25em] lg:editor-h1:text-[2em] md:editor-h1:text-[1.75em] sm:editor-h1:text-[1.5em] editor-h2:text-[1.875em] xl:editor-h2:text-[1.75em] lg:editor-h2:text-[1.5em] md:editor-h2:text-[1.25em] sm:editor-h2:text-[1.125em] editor-h3:text-[1.75em] xl:editor-h3:text-[1.5em] lg:editor-h3:text-[1.25em] md:editor-h3:text-[1.125em] sm:editor-h3:text-[1em] editor-h4:text-[1.5em] xl:editor-h4:text-[1.25em] lg:editor-h4:text-[1.125em] md:editor-h4:text-[1em] editor-h5:text-[1.33em] xl:editor-h5:text-[1.125em] lg:editor-h5:text-[1em] editor-h6:text-[1.25em] xl:editor-h6:text-[1.125em] lg:editor-h6:text-[1em];
+}
+.text-hover-effect,
+.hover-circle-effect,
+.image-reveal-effect,
+.text-hover-effect-child {
+  @apply relative;
+}
+.form-el {
+  @apply relative border-0 ring-0 focus:border-0 focus:ring-0 focus:ring-offset-0 leading-normal;
+}
+.dynamic-sticky {
+  @apply duration-350 transition-[margin];
+}
