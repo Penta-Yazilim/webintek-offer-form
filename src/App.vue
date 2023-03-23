@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CustomSelect from '@/components/CustomSelect.vue';
 </script>
 
 <template>
@@ -10,7 +11,7 @@
       <div
         class="steps flex items-center justify-center relative z-10 gap-[90px] xl:gap-[75px] lg:gap-[60px] md:gap-[45px] sm:gap-[30px] xs:gap-[20px]">
         <template v-for="i in Array(5).keys()">
-          <div :class="{ 'active': i  === 0 }"
+          <div :class="{ 'active': i === 0 }"
             class="item relative overflow-hidden isolate [--circle-bg-color:var(--color-chetwode-blue-600)] hover-circle-effect [&.completed]:shadow-none [&.completed]:pointer-events-none [&.completed>.check>svg]:scale-100 [&.completed>.check>svg]:opacity-100 [&.completed>.check]:opacity-100 [&.active]:bg-ebony-clay-800 [&.active]:pointer-events-none cursor-pointer w-[60px] h-[60px] md:w-[45px] md:h-[45px] xs:w-[35px] xs:h-[35px] duration-350 shadow-[inset_0_0_0_1px_var(--color-ebony-clay-800)] rounded-full flex items-center justify-center bg-body-color text-white font-semibold text-[20px]">
             <span class="block relative z-10 md:text-[14px] xs:text-[12px]">
               {{ i + 1 }}
@@ -48,7 +49,7 @@
                   class="box duration-350 peer-hover:translate-y-[-10px] backface-hidden shadow-[0_0_0_1px_var(--color-ebony-clay-800)] peer-checked:pointer-events-none peer-hover:shadow-[0_0_0_1px_var(--color-ebony-clay-600)] peer-checked:shadow-[0_0_0_1px_var(--color-dull-lavender-500)] rounded-[10px] p-[30px] flex flex-col items-center peer-checked:[&>svg]:opacity-100 peer-checked:[&>svg]:scale-100">
                   <div
                     class="image w-[50px] h-[50px] flex items-center justify-center bg-ebony-clay-800 rounded-[10px] mb-[15px]">
-                    <img class="w-[25px] h-[25px] obje`ct-contain object-center block"
+                    <img class="w-[25px] h-[25px] object-contain object-center block"
                       src="@/assets/image/icon/image-12.png" alt="">
                   </div>
                   <div
@@ -433,52 +434,7 @@
               </div>
 
               <div class="form-el custom-select">
-                <select id="city" class="peer absolute left-0 top-0 w-full h-full opacity-0 z-10 !cursor-pointer" multiple
-                  required>
-                  <option class="text-white bg-body-color" selected disabled>Projenizdeki dil seçenekleri nelerdir?
-                  </option>
-                  <option class="text-white bg-body-color" value="1">İngilizce</option>
-                  <option class="text-white bg-body-color" value="2">Çince</option>
-                  <option class="text-white bg-body-color" value="3">Almanca</option>
-                </select>
-                <div
-                  class="select relative !cursor-pointer peer-hover:[&>.box]:!shadow-[0_0_0_1px_var(--color-lynch-600)] peer-focus:[&>.box]:!shadow-[0_0_0_1px_var(--color-primary)]">
-                  <div
-                    class="box h-[80px] flex items-center font-extralight px-[30px] focus:ring-0 focus:ring-offset-0 duration-350 shadow-[0_0_0_1px_var(--color-lynch-800)] rounded-[10px] w-full border-0 bg-transparent text-white text:text-lynch-500">
-                    <div class="placeholder" data-empty="Lütfen Dil Seçimi Yapın." data-value="{count} adet öğe seçtiniz"
-                      data-count="0">Lütfen Dil Seçimi Yapın.</div>
-                  </div>
-                  <div
-                    class="options absolute left-0 top-full bg-body-color shadow-[0_0_0_1px_var(--color-lynch-800)] w-full z-30 max-h-[135px] overflow-x-hidden overflow-y-auto hidden">
-                    <div
-                      class="item [&:not(:first-child)]:border-solid [&:not(:first-child)]:border-t-[1px] [&:not(:first-child)]:border-t-lynch-800/50 text-lynch-500 px-[20px] py-[10px] duration-350 hover:text-white [&.is-selected]:text-white [&.is-selected]:font-bold">
-                      İngilizce</div>
-                    <div
-                      class="item [&:not(:first-child)]:border-solid [&:not(:first-child)]:border-t-[1px] [&:not(:first-child)]:border-t-lynch-800/50 text-lynch-500 px-[20px] py-[10px] duration-350 hover:text-white [&.is-selected]:text-white [&.is-selected]:font-bold">
-                      Çince</div>
-                    <div
-                      class="item [&:not(:first-child)]:border-solid [&:not(:first-child)]:border-t-[1px] [&:not(:first-child)]:border-t-lynch-800/50 text-lynch-500 px-[20px] py-[10px] duration-350 hover:text-white [&.is-selected]:text-white [&.is-selected]:font-bold">
-                      Almanca</div>
-                    <div
-                      class="item [&:not(:first-child)]:border-solid [&:not(:first-child)]:border-t-[1px] [&:not(:first-child)]:border-t-lynch-800/50 text-lynch-500 px-[20px] py-[10px] duration-350 hover:text-white [&.is-selected]:text-white [&.is-selected]:font-bold">
-                      Rusça</div>
-                    <div
-                      class="item [&:not(:first-child)]:border-solid [&:not(:first-child)]:border-t-[1px] [&:not(:first-child)]:border-t-lynch-800/50 text-lynch-500 px-[20px] py-[10px] duration-350 hover:text-white [&.is-selected]:text-white [&.is-selected]:font-bold">
-                      İtalyanca</div>
-                    <div
-                      class="item [&:not(:first-child)]:border-solid [&:not(:first-child)]:border-t-[1px] [&:not(:first-child)]:border-t-lynch-800/50 text-lynch-500 px-[20px] py-[10px] duration-350 hover:text-white [&.is-selected]:text-white [&.is-selected]:font-bold">
-                      Arapça</div>
-                    <div
-                      class="item [&:not(:first-child)]:border-solid [&:not(:first-child)]:border-t-[1px] [&:not(:first-child)]:border-t-lynch-800/50 text-lynch-500 px-[20px] py-[10px] duration-350 hover:text-white [&.is-selected]:text-white [&.is-selected]:font-bold">
-                      Fransızca</div>
-                  </div>
-                </div>
-                <label for="city"
-                  class="text-white peer-focus:text-primary leading-none whitespace-nowrap peer-focus:font-bold duration-350 font-extralight absolute focus:text-primary text-[14px] left-[15px] top-0 translate-y-[-50%] bg-body-color px-[15px]">Dil
-                  Seçeneği</label>
-                <div
-                  class="icon icon-chevron-bottom absolute text-white right-[30px] top-[34px] text-[16px] h-[16px] leading-none">
-                </div>
+                <CustomSelect />
               </div>
 
               <div class="form-el">

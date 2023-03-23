@@ -206,7 +206,7 @@ module.exports = {
     }, */
   plugins: [
     require("@tailwindcss/typography")({ className: "editor" }),
-    /* require('@tailwindcss/forms'), */
+    // require('@tailwindcss/forms'),
     /* require('@tailwindcss/aspect-ratio'), */
     require("@tailwindcss/line-clamp"),
     require("@tailwindcss/container-queries"),
