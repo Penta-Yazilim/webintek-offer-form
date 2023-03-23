@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import CustomSelect from '@/components/CustomSelect.vue';
+import { ref } from 'vue';
+
+const testSelect = ref(null);
 </script>
 
 <template>
@@ -433,9 +436,20 @@ import CustomSelect from '@/components/CustomSelect.vue';
                   Bilgileri</label>
               </div>
 
-              <div class="form-el custom-select">
-                <CustomSelect />
-              </div>
+              <CustomSelect v-model="testSelect" label="Dil Seçeneği" :options="[
+                {
+                  label: 'İngilizce',
+                  value: 'İngilizce'
+                },
+                {
+                  label: 'Türkçe',
+                  value: 'Türkçe'
+                },
+                {
+                  label: 'İspanyolca',
+                  value: 'İspanyolca'
+                }
+              ]" />
 
               <div class="form-el">
                 <input type="text" id="company-position" placeholder="Web adresiniz varsa yazınız."
