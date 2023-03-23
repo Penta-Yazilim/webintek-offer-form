@@ -2,8 +2,13 @@ import { createApp } from 'vue'
 import './assets/css/style.scss'
 import './assets/css/tailwind.css'
 import App from './App.vue'
+import 'vue3-tel-input/dist/vue3-tel-input.css'
+// @ts-ignore
+import VueTelInput from 'vue3-tel-input'
 
 const app = createApp(App);
+
+app.use(VueTelInput);
 
 // Make a directive to handle the click outside of the element by typescript
 app.directive('click-outside', {
