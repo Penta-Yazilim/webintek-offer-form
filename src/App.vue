@@ -4,7 +4,7 @@ import CustomSelect from "@/components/CustomSelect.vue";
 import Step from "@/components/Step.vue";
 import Steps from "@/components/Steps.vue";
 
-const type = ref("quickly");
+const type = ref(null);
 </script>
 
 <template>
