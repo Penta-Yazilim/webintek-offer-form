@@ -2,11 +2,149 @@
 import CustomSelect from "@/components/CustomSelect.vue";
 import Steps from "@/components/Steps.vue";
 import Step from "@/components/Step.vue";
+import { nextTick, onMounted, reactive, watch } from "vue";
+
+// @ts-ignore
+import Form from "form-backend-validation";
+
+const emit = defineEmits(["showSuccess"]);
+
+const props = defineProps({
+  baseURL: {
+    type: String,
+    required: true,
+  },
+});
+
+const form = reactive(
+  new Form({
+    for: "company",
+    service_type: "complete",
+    name: null,
+    last_name: null,
+    phone_number: null,
+    email_address: null,
+    desc: null,
+    _service: null,
+    _languages: [],
+    city: "",
+    district: "",
+  })
+);
+
+async function submitForm() {
+  try {
+    const data = await form.post(`${props.baseURL}/service-form`);
+
+    emit("showSuccess", data.message);
+  } catch (error) {}
+}
+
+watch(
+  () => form.service_type,
+  (val) => {
+    setTabContent(false);
+  }
+);
+
+interface CompleteService {
+  title: string;
+  description: string;
+  image: URL;
+}
+
+const completeServices = reactive<CompleteService[]>([
+  {
+    title: "Web Tasarım",
+    description: "Web tasarım ihtiyacınız için seçebilirsiniz.",
+    image: new URL("@/assets/image/icon/image-1.png", import.meta.url),
+  },
+  {
+    title: "E-Ticaret",
+    description: "Online pazarda ürünlerinizi satmak istiyorsanız seçiniz.",
+    image: new URL("@/assets/image/icon/image-2.png", import.meta.url),
+  },
+  {
+    title: "SEO",
+    description: "Online pazarda ürünlerinizi satmak istiyorsanız seçiniz.",
+    image: new URL("@/assets/image/icon/statistic.png", import.meta.url),
+  },
+  {
+    title: "Dijital Pazarlama",
+    description: "Online pazarda ürünlerinizi satmak istiyorsanız seçiniz.",
+    image: new URL("@/assets/image/icon/image-3.png", import.meta.url),
+  },
+  {
+    title: "Kurumsal Kimlik",
+    description: "Online pazarda ürünlerinizi satmak istiyorsanız seçiniz.",
+    image: new URL("@/assets/image/icon/image-4.png", import.meta.url),
+  },
+  {
+    title: "Ürün Çekimi",
+    description: "Online pazarda ürünlerinizi satmak istiyorsanız seçiniz.",
+    image: new URL("@/assets/image/icon/photoplus.png", import.meta.url),
+  },
+]);
+
+const partialServices = reactive<CompleteService[]>([
+  {
+    title: "E-Ticaret",
+    description: "Online pazarda ürünlerinizi satmak istiyorsanız seçiniz.",
+    image: new URL("@/assets/image/icon/image-2.png", import.meta.url),
+  },
+  {
+    title: "SEO",
+    description: "Online pazarda ürünlerinizi satmak istiyorsanız seçiniz.",
+    image: new URL("@/assets/image/icon/statistic.png", import.meta.url),
+  },
+]);
+
+const setHeight = async () => {
+  await nextTick();
+
+  const activeStep = document.querySelector(
+    ".form-content .steps .step.active"
+  ) as HTMLElement;
+
+  if (activeStep) {
+    const steps = document.querySelector(".form-content .steps") as HTMLElement;
+
+    steps.style.height = `${activeStep.scrollHeight}px`;
+  }
+};
+
+onMounted(() => {
+  setTabContent();
+});
+
+async function setTabContent(setHeightOfSteps = true) {
+  await nextTick();
+
+  const content = document.querySelector(
+    ".c-check-tabs .tab-content"
+  ) as HTMLElement;
+
+  if (content) {
+    const item = document.querySelector(
+      ".c-check-tabs .tab-content .item.active"
+    ) as HTMLElement;
+
+    const h = item.scrollHeight + 30;
+
+    content.style.height = `${h}px`;
+  }
+
+  if (setHeightOfSteps) {
+    await nextTick();
+
+    setHeight();
+  }
+}
 </script>
 
 <template>
-  <Steps>
-    <Step title="Bu projeyi kimin için yapacağız?">
+  <Steps :start="4">
+    <Step :index="0" title="Bu projeyi kimin için yapacağız?">
       <div
         class="custom-check-field mx-auto grid max-w-[575px] grid-cols-2 gap-[50px] md:gap-[40px] sm:grid-cols-1 sm:gap-[30px]"
       >
@@ -14,11 +152,12 @@ import Step from "@/components/Step.vue";
           <input
             class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0 checked:pointer-events-none"
             type="radio"
-            name="step-1"
-            checked
+            name="for"
+            value="company"
+            v-model="form.for"
           />
           <div
-            class="box flex flex-col items-center rounded-[10px] p-[30px] shadow-[0_0_0_1px_var(--color-ebony-clay-800)] duration-350 backface-hidden peer-checked:pointer-events-none peer-checked:shadow-[0_0_0_1px_var(--color-dull-lavender-500)] peer-hover:translate-y-[-10px] peer-hover:shadow-[0_0_0_1px_var(--color-ebony-clay-600)] peer-checked:[&>svg]:scale-100 peer-checked:[&>svg]:opacity-100"
+            class="box flex flex-col items-center rounded-[10px] py-6 px-8 shadow-[0_0_0_1px_var(--color-ebony-clay-800)] duration-350 backface-hidden peer-checked:pointer-events-none peer-checked:shadow-[0_0_0_1px_var(--color-dull-lavender-500)] peer-hover:translate-y-[-10px] peer-hover:shadow-[0_0_0_1px_var(--color-ebony-clay-600)] peer-checked:[&>svg]:scale-100 peer-checked:[&>svg]:opacity-100"
           >
             <div
               class="image mb-[15px] flex h-[50px] w-[50px] items-center justify-center rounded-[10px] bg-ebony-clay-800"
@@ -51,10 +190,12 @@ import Step from "@/components/Step.vue";
           <input
             class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0 checked:pointer-events-none"
             type="radio"
-            name="step-1"
+            value="personal"
+            name="for"
+            v-model="form.for"
           />
           <div
-            class="box flex flex-col items-center rounded-[10px] p-[30px] shadow-[0_0_0_1px_var(--color-ebony-clay-800)] duration-350 backface-hidden peer-checked:pointer-events-none peer-checked:shadow-[0_0_0_1px_var(--color-dull-lavender-500)] peer-hover:translate-y-[-10px] peer-hover:shadow-[0_0_0_1px_var(--color-ebony-clay-600)] peer-checked:[&>svg]:scale-100 peer-checked:[&>svg]:opacity-100"
+            class="box flex flex-col items-center rounded-[10px] py-6 px-8 shadow-[0_0_0_1px_var(--color-ebony-clay-800)] duration-350 backface-hidden peer-checked:pointer-events-none peer-checked:shadow-[0_0_0_1px_var(--color-dull-lavender-500)] peer-hover:translate-y-[-10px] peer-hover:shadow-[0_0_0_1px_var(--color-ebony-clay-600)] peer-checked:[&>svg]:scale-100 peer-checked:[&>svg]:opacity-100"
           >
             <div
               class="image mb-[15px] flex h-[50px] w-[50px] items-center justify-center rounded-[10px] bg-ebony-clay-800"
@@ -85,155 +226,16 @@ import Step from "@/components/Step.vue";
       </div>
     </Step>
 
-    <Step title="Kişisel bilgilerinizi giriniz">
-      <div
-        class="form-field mx-auto grid max-w-[991px] grid-cols-2 gap-x-[30px] gap-y-[45px] sm:grid-cols-1"
-      >
-        <div class="form-el">
-          <input
-            type="text"
-            id="name"
-            placeholder="Adınız Soyadınız"
-            class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
-          />
-          <label
-            for="name"
-            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-            >Ad Soyad</label
-          >
-        </div>
-
-        <div class="form-el">
-          <input
-            type="tel"
-            id="phone"
-            placeholder="+90 553 107 93 64"
-            class="phone-input peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
-          />
-          <label
-            for="phone"
-            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-            >Telefon</label
-          >
-        </div>
-
-        <div class="form-el">
-          <input
-            type="email"
-            id="email"
-            placeholder="E-Posta adresinizi yazınız"
-            class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
-          />
-          <label
-            for="email"
-            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-            >E-Posta</label
-          >
-        </div>
-
-        <div class="form-el">
-          <input
-            type="text"
-            id="company-name"
-            placeholder="Firmanızın adını yazınız"
-            class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
-          />
-          <label
-            for="company-name"
-            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-            >Firma Adı</label
-          >
-        </div>
-
-        <div class="form-el">
-          <select
-            id="city"
-            class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 invalid:text-black hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
-            required
-          >
-            <option class="bg-body-color text-white" selected disabled>
-              Bulunduğunuz şehri seçiniz
-            </option>
-            <option class="bg-body-color text-white" value="1">Şehir 1</option>
-            <option class="bg-body-color text-white" value="2">Şehir 2</option>
-            <option class="bg-body-color text-white" value="3">Şehir 3</option>
-          </select>
-          <label
-            for="city"
-            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-            >Şehir</label
-          >
-          <div
-            class="icon icon-chevron-bottom absolute right-[30px] top-[34px] h-[16px] text-[16px] leading-none text-white"
-          ></div>
-        </div>
-
-        <div class="form-el">
-          <select
-            id="state"
-            class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 invalid:text-black hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
-            required
-          >
-            <option class="bg-body-color text-white" selected disabled>
-              Bulunduğunuz semti seçiniz
-            </option>
-            <option class="bg-body-color text-white" value="1">Semt 1</option>
-            <option class="bg-body-color text-white" value="2">Semt 2</option>
-            <option class="bg-body-color text-white" value="3">Semt 3</option>
-          </select>
-          <label
-            for="state"
-            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-            >Semt</label
-          >
-          <div
-            class="icon icon-chevron-bottom absolute right-[30px] top-[34px] h-[16px] text-[16px] leading-none text-white"
-          ></div>
-        </div>
-      </div>
-    </Step>
-
-    <Step title="Şirket bilgilerinizi giriniz">
-      <div
-        class="form-field mx-auto grid max-w-[991px] grid-cols-2 gap-x-[30px] gap-y-[45px] sm:grid-cols-1"
-      >
-        <div class="form-el">
-          <input
-            type="text"
-            id="company-name"
-            placeholder="Şirket isminizi kısaca yazmanız yeterlidir."
-            class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
-          />
-          <label
-            for="company-name"
-            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-            >Şirketinizin Adı</label
-          >
-        </div>
-
-        <div class="form-el">
-          <input
-            type="text"
-            id="company-position"
-            placeholder="Görevinizi yazınız."
-            class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
-          />
-          <label
-            for="company-position"
-            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-            >Şirketteki Göreviniz</label
-          >
-        </div>
-      </div>
-    </Step>
-
-    <Step title="İstediğiniz hizmetler hangileri?">
-      <div class="custom-check-tabs">
+    <Step :index="1" title="İstediğiniz hizmetler hangileri?">
+      <div class="c-check-tabs">
         <div
-          class="tab-buttons relative mx-auto mb-[90px] flex max-w-[825px] items-center justify-center gap-[45px] lg:mb-[75px] md:mb-[60px] sm:mb-[45px] xs:gap-[30px]"
+          class="relative mx-auto mb-[90px] flex max-w-[825px] items-center justify-center gap-[45px] lg:mb-[75px] md:mb-[60px] sm:mb-[45px] xs:gap-[30px]"
         >
           <div
-            class="active item item group relative z-10 flex cursor-pointer flex-col items-center [&.active>.icon]:scale-100 [&.active>.icon]:opacity-100 [&.active>.text]:text-white"
+            role="button"
+            @click="form.service_type = 'complete'"
+            :class="{ active: form.service_type === 'complete' }"
+            class="item group relative z-10 flex cursor-pointer flex-col items-center [&.active>.icon]:scale-100 [&.active>.icon]:opacity-100 [&.active>.text]:text-white"
           >
             <div
               class="text text-center text-[20px] font-extralight leading-normal text-lynch-500 duration-350 group-hover:text-white lg:text-[18px] md:text-[16px] sm:text-[14px]"
@@ -249,7 +251,10 @@ import Step from "@/components/Step.vue";
             </div>
           </div>
           <div
-            class="item item group relative z-10 flex cursor-pointer flex-col items-center [&.active>.icon]:scale-100 [&.active>.icon]:opacity-100 [&.active>.text]:text-white"
+            role="button"
+            @click="form.service_type = 'partial'"
+            :class="{ active: form.service_type === 'partial' }"
+            class="item group relative z-10 flex cursor-pointer flex-col items-center [&.active>.icon]:scale-100 [&.active>.icon]:opacity-100 [&.active>.text]:text-white"
           >
             <div
               class="text text-center text-[20px] font-extralight leading-normal text-lynch-500 duration-350 group-hover:text-white lg:text-[18px] md:text-[16px] sm:text-[14px]"
@@ -269,148 +274,43 @@ import Step from "@/components/Step.vue";
           ></div>
         </div>
         <div
-          class="tab-content relative mx-auto w-full max-w-[575px] overflow-hidden duration-600"
+          class="tab-content relative mx-auto w-full overflow-hidden duration-600"
         >
           <div
-            class="active item custom-check-field invisible absolute left-0 top-0 grid w-full max-w-[575px] translate-y-[30px] grid-cols-2 gap-[50px] p-[12px] opacity-0 duration-450 md:gap-[40px] sm:grid-cols-1 sm:gap-[30px] [&.active]:visible [&.active]:translate-y-0 [&.active]:opacity-100 [&.active]:delay-200"
+            :class="{ active: form.service_type === 'complete' }"
+            class="item custom-check-field invisible absolute left-0 top-0 grid h-full w-full translate-y-[30px] grid-cols-3 gap-[50px] p-[12px] opacity-0 duration-450 md:gap-[40px] sm:grid-cols-1 sm:gap-[30px] [&.active]:visible [&.active]:translate-y-0 [&.active]:opacity-100 [&.active]:delay-200"
           >
-            <div class="custom-check relative">
+            <div
+              class="custom-check relative flex h-full w-full"
+              v-for="(item, key) in completeServices"
+              :key="`c-service-${key}`"
+            >
               <input
                 class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
-                type="checkbox"
-                name="step-4"
-                checked
+                type="radio"
+                name="c-service"
+                :value="item.title"
+                v-model="form._service"
               />
               <div
-                class="box flex flex-col items-center rounded-[10px] p-[30px] shadow-[0_0_0_1px_var(--color-ebony-clay-800)] duration-350 backface-hidden peer-checked:shadow-[0_0_0_1px_var(--color-dull-lavender-500)] peer-hover:translate-y-[-10px] peer-hover:shadow-[0_0_0_1px_var(--color-ebony-clay-600)] peer-checked:[&>svg]:scale-100 peer-checked:[&>svg]:opacity-100"
+                class="box flex flex-col items-center rounded-[10px] py-6 px-8 shadow-[0_0_0_1px_var(--color-ebony-clay-800)] duration-350 backface-hidden peer-checked:shadow-[0_0_0_1px_var(--color-dull-lavender-500)] peer-hover:translate-y-[-10px] peer-hover:shadow-[0_0_0_1px_var(--color-ebony-clay-600)] peer-checked:[&>svg]:scale-100 peer-checked:[&>svg]:opacity-100"
               >
                 <div
                   class="image mb-[15px] flex h-[50px] w-[50px] items-center justify-center rounded-[10px] bg-ebony-clay-800"
                 >
                   <img
                     class="block h-[25px] w-[25px] object-contain object-center"
-                    src="@/assets/image/icon/image-1.png"
-                    alt=""
+                    :src="item.image"
                   />
                 </div>
-                <div
-                  class="text-editor text-center editor-p:text-[14px] editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
+                <h3 class="py-2 text-center text-xl font-extralight leading-5">
+                  {{ item.title }}
+                </h3>
+                <p
+                  class="py-4 text-center text-sm font-extralight text-lynch-500"
                 >
-                  <h3>Web Tasarım</h3>
-                  <p>Web tasarım ihtiyacınız için seçebilirsiniz.</p>
-                </div>
-                <svg
-                  class="absolute right-[15px] top-[15px] h-[30px] w-[30px] origin-center scale-50 fill-primary opacity-0 duration-350"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 30 30"
-                >
-                  <path
-                    d="m15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm8.38,11.05l-9.59,9.51c-.56.56-1.47.6-2.07.04l-5.08-4.62c-.6-.56-.64-1.5-.11-2.11.56-.6,1.5-.64,2.11-.08l4.02,3.68,8.57-8.57c.6-.6,1.54-.6,2.14,0,.6.6.6,1.54,0,2.14Z"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <div class="custom-check relative">
-              <input
-                class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
-                type="checkbox"
-                name="step-4"
-              />
-              <div
-                class="box flex flex-col items-center rounded-[10px] p-[30px] shadow-[0_0_0_1px_var(--color-ebony-clay-800)] duration-350 backface-hidden peer-checked:shadow-[0_0_0_1px_var(--color-dull-lavender-500)] peer-hover:translate-y-[-10px] peer-hover:shadow-[0_0_0_1px_var(--color-ebony-clay-600)] peer-checked:[&>svg]:scale-100 peer-checked:[&>svg]:opacity-100"
-              >
-                <div
-                  class="image mb-[15px] flex h-[50px] w-[50px] items-center justify-center rounded-[10px] bg-ebony-clay-800"
-                >
-                  <img
-                    class="block h-[25px] w-[25px] object-contain object-center"
-                    src="@/assets/image/icon/image-2.png"
-                    alt=""
-                  />
-                </div>
-                <div
-                  class="text-editor text-center editor-p:text-[14px] editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
-                >
-                  <h3>E-Ticaret</h3>
-                  <p>
-                    Online pazarda ürünlerinizi satmak istiyorsanız seçiniz.
-                  </p>
-                </div>
-                <svg
-                  class="absolute right-[15px] top-[15px] h-[30px] w-[30px] origin-center scale-50 fill-primary opacity-0 duration-350"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 30 30"
-                >
-                  <path
-                    d="m15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm8.38,11.05l-9.59,9.51c-.56.56-1.47.6-2.07.04l-5.08-4.62c-.6-.56-.64-1.5-.11-2.11.56-.6,1.5-.64,2.11-.08l4.02,3.68,8.57-8.57c.6-.6,1.54-.6,2.14,0,.6.6.6,1.54,0,2.14Z"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <div class="custom-check relative">
-              <input
-                class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
-                type="checkbox"
-                name="step-4"
-              />
-              <div
-                class="box flex flex-col items-center rounded-[10px] p-[30px] shadow-[0_0_0_1px_var(--color-ebony-clay-800)] duration-350 backface-hidden peer-checked:shadow-[0_0_0_1px_var(--color-dull-lavender-500)] peer-hover:translate-y-[-10px] peer-hover:shadow-[0_0_0_1px_var(--color-ebony-clay-600)] peer-checked:[&>svg]:scale-100 peer-checked:[&>svg]:opacity-100"
-              >
-                <div
-                  class="image mb-[15px] flex h-[50px] w-[50px] items-center justify-center rounded-[10px] bg-ebony-clay-800"
-                >
-                  <img
-                    class="block h-[25px] w-[25px] object-contain object-center"
-                    src="@/assets/image/icon/image-3.png"
-                    alt=""
-                  />
-                </div>
-                <div
-                  class="text-editor text-center editor-p:text-[14px] editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
-                >
-                  <h3>Dijital Pazarlama</h3>
-                  <p>Web tasarım ihtiyacınız için seçebilirsiniz.</p>
-                </div>
-                <svg
-                  class="absolute right-[15px] top-[15px] h-[30px] w-[30px] origin-center scale-50 fill-primary opacity-0 duration-350"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 30 30"
-                >
-                  <path
-                    d="m15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm8.38,11.05l-9.59,9.51c-.56.56-1.47.6-2.07.04l-5.08-4.62c-.6-.56-.64-1.5-.11-2.11.56-.6,1.5-.64,2.11-.08l4.02,3.68,8.57-8.57c.6-.6,1.54-.6,2.14,0,.6.6.6,1.54,0,2.14Z"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <div class="custom-check relative">
-              <input
-                class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
-                type="checkbox"
-                name="step-4"
-              />
-              <div
-                class="box flex flex-col items-center rounded-[10px] p-[30px] shadow-[0_0_0_1px_var(--color-ebony-clay-800)] duration-350 backface-hidden peer-checked:shadow-[0_0_0_1px_var(--color-dull-lavender-500)] peer-hover:translate-y-[-10px] peer-hover:shadow-[0_0_0_1px_var(--color-ebony-clay-600)] peer-checked:[&>svg]:scale-100 peer-checked:[&>svg]:opacity-100"
-              >
-                <div
-                  class="image mb-[15px] flex h-[50px] w-[50px] items-center justify-center rounded-[10px] bg-ebony-clay-800"
-                >
-                  <img
-                    class="block h-[25px] w-[25px] object-contain object-center"
-                    src="@/assets/image/icon/image-4.png"
-                    alt=""
-                  />
-                </div>
-                <div
-                  class="text-editor text-center editor-p:text-[14px] editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
-                >
-                  <h3>Kurumsal Kimlik</h3>
-                  <p>
-                    Online pazarda ürünlerinizi satmak istiyorsanız seçiniz.
-                  </p>
-                </div>
+                  {{ item.description }}
+                </p>
                 <svg
                   class="absolute right-[15px] top-[15px] h-[30px] w-[30px] origin-center scale-50 fill-primary opacity-0 duration-350"
                   xmlns="http://www.w3.org/2000/svg"
@@ -425,71 +325,40 @@ import Step from "@/components/Step.vue";
           </div>
 
           <div
+            :class="{ active: form.service_type === 'partial' }"
             class="item custom-check-field invisible absolute left-0 top-0 grid w-full max-w-[575px] translate-y-[30px] grid-cols-2 gap-[50px] p-[12px] opacity-0 duration-450 md:gap-[40px] sm:grid-cols-1 sm:gap-[30px] [&.active]:visible [&.active]:translate-y-0 [&.active]:opacity-100 [&.active]:delay-200"
           >
-            <div class="custom-check relative">
+            <div
+              class="custom-check relative flex h-full w-full"
+              v-for="(item, key) in partialServices"
+              :key="`p-service-${key}`"
+            >
               <input
                 class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
-                type="checkbox"
-                name="step-4"
-                checked
+                type="radio"
+                name="p-service"
+                :value="item.title"
+                v-model="form._service"
               />
               <div
-                class="box flex flex-col items-center rounded-[10px] p-[30px] shadow-[0_0_0_1px_var(--color-ebony-clay-800)] duration-350 backface-hidden peer-checked:shadow-[0_0_0_1px_var(--color-dull-lavender-500)] peer-hover:translate-y-[-10px] peer-hover:shadow-[0_0_0_1px_var(--color-ebony-clay-600)] peer-checked:[&>svg]:scale-100 peer-checked:[&>svg]:opacity-100"
+                class="box flex flex-col items-center rounded-[10px] py-6 px-8 shadow-[0_0_0_1px_var(--color-ebony-clay-800)] duration-350 backface-hidden peer-checked:shadow-[0_0_0_1px_var(--color-dull-lavender-500)] peer-hover:translate-y-[-10px] peer-hover:shadow-[0_0_0_1px_var(--color-ebony-clay-600)] peer-checked:[&>svg]:scale-100 peer-checked:[&>svg]:opacity-100"
               >
                 <div
                   class="image mb-[15px] flex h-[50px] w-[50px] items-center justify-center rounded-[10px] bg-ebony-clay-800"
                 >
                   <img
                     class="block h-[25px] w-[25px] object-contain object-center"
-                    src="@/assets/image/icon/image-1.png"
-                    alt=""
+                    :src="item.image"
                   />
                 </div>
-                <div
-                  class="text-editor text-center editor-p:text-[14px] editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
+                <h3 class="py-2 text-center text-xl font-extralight leading-5">
+                  {{ item.title }}
+                </h3>
+                <p
+                  class="py-4 text-center text-sm font-extralight text-lynch-500"
                 >
-                  <h3>Web Tasarım</h3>
-                  <p>Web tasarım ihtiyacınız için seçebilirsiniz.</p>
-                </div>
-                <svg
-                  class="absolute right-[15px] top-[15px] h-[30px] w-[30px] origin-center scale-50 fill-primary opacity-0 duration-350"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 30 30"
-                >
-                  <path
-                    d="m15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm8.38,11.05l-9.59,9.51c-.56.56-1.47.6-2.07.04l-5.08-4.62c-.6-.56-.64-1.5-.11-2.11.56-.6,1.5-.64,2.11-.08l4.02,3.68,8.57-8.57c.6-.6,1.54-.6,2.14,0,.6.6.6,1.54,0,2.14Z"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <div class="custom-check relative">
-              <input
-                class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
-                type="checkbox"
-                name="step-4"
-              />
-              <div
-                class="box flex flex-col items-center rounded-[10px] p-[30px] shadow-[0_0_0_1px_var(--color-ebony-clay-800)] duration-350 backface-hidden peer-checked:shadow-[0_0_0_1px_var(--color-dull-lavender-500)] peer-hover:translate-y-[-10px] peer-hover:shadow-[0_0_0_1px_var(--color-ebony-clay-600)] peer-checked:[&>svg]:scale-100 peer-checked:[&>svg]:opacity-100"
-              >
-                <div
-                  class="image mb-[15px] flex h-[50px] w-[50px] items-center justify-center rounded-[10px] bg-ebony-clay-800"
-                >
-                  <img
-                    class="block h-[25px] w-[25px] object-contain object-center"
-                    src="@/assets/image/icon/image-2.png"
-                    alt=""
-                  />
-                </div>
-                <div
-                  class="text-editor text-center editor-p:text-[14px] editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
-                >
-                  <h3>E-Ticaret</h3>
-                  <p>
-                    Online pazarda ürünlerinizi satmak istiyorsanız seçiniz.
-                  </p>
-                </div>
+                  {{ item.description }}
+                </p>
                 <svg
                   class="absolute right-[15px] top-[15px] h-[30px] w-[30px] origin-center scale-50 fill-primary opacity-0 duration-350"
                   xmlns="http://www.w3.org/2000/svg"
@@ -506,7 +375,7 @@ import Step from "@/components/Step.vue";
       </div>
     </Step>
 
-    <Step title="Bize projenizden bahseder misiniz?">
+    <Step :index="2" title="Bize projenizden bahseder misiniz?">
       <div
         class="form-field mx-auto grid max-w-[991px] grid-cols-2 gap-x-[30px] gap-y-[45px] sm:grid-cols-1"
       >
@@ -514,17 +383,28 @@ import Step from "@/components/Step.vue";
           <textarea
             id="message"
             placeholder="Pojeniz hakkında bize bilgi verebilir misiniz?"
+            v-model="form.desc"
+            :class="{
+              '!shadow-pink-600 ring-0 ring-offset-0': form.errors.has('desc'),
+            }"
             class="peer h-[200px] w-full rounded-[10px] border-0 bg-transparent p-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
           ></textarea>
           <label
             for="message"
+            :class="{ '!text-pink-600': form.errors.has('desc') }"
             class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
             >Proje Bilgileri</label
           >
+          <p class="mt-2 text-sm text-pink-600" v-if="form.errors.has('desc')">
+            {{ form.errors.first("desc") }}
+          </p>
         </div>
 
         <CustomSelect
           label="Dil Seçeneği"
+          placeholder="Projenizdeki dil seçenekleri nelerdir?"
+          multiple
+          v-model="form._languages"
           :options="[
             {
               label: 'İngilizce',
@@ -534,10 +414,6 @@ import Step from "@/components/Step.vue";
               label: 'Türkçe',
               value: 'Türkçe',
             },
-            {
-              label: 'İspanyolca',
-              value: 'İspanyolca',
-            },
           ]"
         />
 
@@ -546,16 +422,28 @@ import Step from "@/components/Step.vue";
             type="text"
             id="company-position"
             placeholder="Web adresiniz varsa yazınız."
+            v-model="form.site_address"
             class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
+            :class="{
+              '!shadow-pink-600 ring-0 ring-offset-0':
+                form.errors.has('site_address'),
+            }"
           />
           <label
             for="company-position"
             class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-            >Alan Adı</label
+            :class="{ '!text-pink-600': form.errors.has('site_address') }"
+            >Alan Adı
+          </label>
+          <p
+            class="mt-2 text-sm text-pink-600"
+            v-if="form.errors.has('site_address')"
           >
+            {{ form.errors.first("site_address") }}
+          </p>
         </div>
 
-        <div
+        <!-- <div
           class="form-el col-span-2 flex items-center justify-center gap-[30px] sm:col-span-1"
         >
           <input
@@ -578,6 +466,244 @@ import Step from "@/components/Step.vue";
             >
             okudum ve kabul ediyorum.</label
           >
+        </div> -->
+      </div>
+    </Step>
+
+    <Step
+      :index="3"
+      title="Şirket bilgilerinizi giriniz"
+      v-if="form.for === 'company'"
+    >
+      <div
+        class="form-field mx-auto grid max-w-[991px] grid-cols-2 gap-x-[30px] gap-y-[45px] sm:grid-cols-1"
+      >
+        <div class="form-el">
+          <input
+            type="text"
+            id="company-name"
+            placeholder="Şirket isminizi kısaca yazmanız yeterlidir."
+            v-model="form.company_name"
+            :class="{
+              '!shadow-pink-600 ring-0 ring-offset-0':
+                form.errors.has('company_name'),
+            }"
+            class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
+          />
+          <label
+            for="company-name"
+            :class="{ '!text-pink-600': form.errors.has('company_name') }"
+            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
+            >Şirketinizin Adı</label
+          >
+
+          <p
+            class="mt-2 text-sm text-pink-600"
+            v-if="form.errors.has('company_name')"
+          >
+            {{ form.errors.first("company_name") }}
+          </p>
+        </div>
+
+        <div class="form-el">
+          <input
+            type="text"
+            id="company-position"
+            placeholder="Görevinizi yazınız."
+            :class="{
+              '!shadow-pink-600 ring-0 ring-offset-0':
+                form.errors.has('company_position'),
+            }"
+            class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
+          />
+          <label
+            :class="{ '!text-pink-600': form.errors.has('company_position') }"
+            for="company-position"
+            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
+          >
+            Şirketteki Göreviniz
+          </label>
+
+          <p
+            class="mt-2 text-sm text-pink-600"
+            v-if="form.errors.has('company_position')"
+          >
+            {{ form.errors.first("company_position") }}
+          </p>
+        </div>
+      </div>
+    </Step>
+
+    <Step
+      :index="form.for === 'company' ? 4 : 3"
+      title="Kişisel bilgilerinizi giriniz"
+    >
+      <div
+        class="form-field mx-auto grid max-w-[991px] grid-cols-2 gap-x-[30px] gap-y-[45px] sm:grid-cols-1"
+      >
+        <div class="form-el">
+          <input
+            type="text"
+            placeholder="Adınız"
+            class="h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
+            v-model="form.name"
+            :class="{
+              '!shadow-pink-600 ring-0 ring-offset-0': form.errors.has('name'),
+            }"
+          />
+          <label
+            for="name"
+            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
+            :class="{ '!text-pink-600': form.errors.has('name') }"
+            >Ad
+          </label>
+
+          <p
+            class="mt-[5px] text-[14px] font-extralight text-pink-600 duration-350"
+            v-if="form.errors.has('name')"
+          >
+            {{ form.errors.first("name") }}
+          </p>
+        </div>
+
+        <div class="form-el">
+          <input
+            type="text"
+            placeholder="Soyadınız"
+            class="h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
+            v-model="form.last_name"
+            :class="{
+              '!shadow-pink-600 ring-0 ring-offset-0':
+                form.errors.has('last_name'),
+            }"
+          />
+          <label
+            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
+            :class="{ '!text-pink-600': form.errors.has('last_name') }"
+            >Soyad
+          </label>
+
+          <p
+            class="mt-[5px] text-[14px] font-extralight text-pink-600 duration-350"
+            v-if="form.errors.has('last_name')"
+          >
+            {{ form.errors.first("last_name") }}
+          </p>
+        </div>
+
+        <div class="form-el">
+          <vue-tel-input
+            :input-options="{ placeholder: '0553  107  93  64' }"
+            @input="($: any,phoneObject: any|null) => {
+            form.phone_number = phoneObject?.number;
+          }"
+            :class="{
+              error: form.errors.has('phone_number'),
+            }"
+          />
+          <label
+            class="absolute left-[15px] top-0 z-[999] translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
+            :class="{ '!text-pink-600': form.errors.has('phone_number') }"
+          >
+            Telefon
+          </label>
+
+          <p
+            class="mt-2 text-sm text-pink-600"
+            v-if="form.errors.has('phone_number')"
+          >
+            {{ form.errors.first("phone_number") }}
+          </p>
+        </div>
+
+        <div class="form-el">
+          <input
+            type="email"
+            id="email"
+            :class="{
+              '!shadow-pink-600 ring-0 ring-offset-0': form.errors.has('email'),
+            }"
+            placeholder="E-Posta adresinizi yazınız"
+            class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
+          />
+          <label
+            for="email"
+            :class="{ '!text-pink-600': form.errors.has('email') }"
+            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
+            >E-Posta</label
+          >
+
+          <p
+            class="mt-[5px] text-[14px] font-extralight text-pink-600 duration-350"
+            v-if="form.errors.has('email')"
+          >
+            {{ form.errors.first("email") }}
+          </p>
+        </div>
+
+        <div class="form-el">
+          <select
+            id="city"
+            class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 invalid:text-black hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
+            :class="{
+              '!shadow-pink-600 ring-0 ring-offset-0': form.errors.has('city'),
+            }"
+          >
+            <option class="bg-body-color text-white" selected disabled value="">
+              Bulunduğunuz şehri seçiniz
+            </option>
+            <option class="bg-body-color text-white" value="1">Şehir 1</option>
+            <option class="bg-body-color text-white" value="2">Şehir 2</option>
+            <option class="bg-body-color text-white" value="3">Şehir 3</option>
+          </select>
+          <label
+            for="city"
+            :class="{ '!text-pink-600': form.errors.has('city') }"
+            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
+            >Şehir</label
+          >
+          <div
+            class="icon icon-chevron-bottom absolute right-[30px] top-[34px] h-[16px] text-[16px] leading-none text-white"
+          ></div>
+
+          <p
+            class="mt-[5px] text-[14px] font-extralight text-pink-600 duration-350"
+            v-if="form.errors.has('city')"
+          >
+            {{ form.errors.first("city") }}
+          </p>
+        </div>
+
+        <div class="form-el">
+          <select
+            class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 invalid:text-black hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
+            :class="{
+              '!shadow-pink-600 ring-0 ring-offset-0':
+                form.errors.has('district'),
+            }"
+          >
+            <option class="bg-body-color text-white" selected disabled value="">
+              Bulunduğunuz semti seçiniz
+            </option>
+            <option class="bg-body-color text-white" value="1">Semt 1</option>
+            <option class="bg-body-color text-white" value="2">Semt 2</option>
+            <option class="bg-body-color text-white" value="3">Semt 3</option>
+          </select>
+          <label
+            :class="{ '!text-pink-600': form.errors.has('district') }"
+            class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
+            >Semt</label
+          >
+          <div
+            class="icon icon-chevron-bottom absolute right-[30px] top-[34px] h-[16px] text-[16px] leading-none text-white"
+          ></div>
+
+          <p
+            class="mt-[5px] text-[14px] font-extralight text-pink-600 duration-350"
+            v-if="form.errors.has('district')"
+          >
+            {{ form.errors.first("district") }}
+          </p>
         </div>
       </div>
     </Step>

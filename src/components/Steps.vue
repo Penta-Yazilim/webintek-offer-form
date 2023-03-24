@@ -7,16 +7,18 @@
       <div
         class="steps relative z-10 flex items-center justify-center gap-[90px] xl:gap-[75px] lg:gap-[60px] md:gap-[45px] sm:gap-[30px] xs:gap-[20px]"
       >
-        <template v-for="i in Array(steps.stepsCount).keys()">
+        <template v-for="i in steps.items.length">
           <div
+            role="button"
+            @click="i - 1 < steps.value ? steps.go(i - 1) : null"
             :class="{
-              active: i === steps.value - 1,
-              completed: i < steps.value - 1,
+              active: i - 1 === steps.value,
+              completed: i - 1 < steps.value,
             }"
-            class="item hover-circle-effect relative isolate flex h-[60px] w-[60px] cursor-pointer items-center justify-center overflow-hidden rounded-full bg-body-color text-[20px] font-semibold text-white shadow-[inset_0_0_0_1px_var(--color-ebony-clay-800)] duration-350 [--circle-bg-color:var(--color-chetwode-blue-600)] md:h-[45px] md:w-[45px] xs:h-[35px] xs:w-[35px] [&.active]:pointer-events-none [&.active]:bg-ebony-clay-800 [&.completed>.check>svg]:scale-100 [&.completed>.check>svg]:opacity-100 [&.completed>.check]:opacity-100 [&.completed]:pointer-events-none [&.completed]:shadow-none"
+            class="item hover-circle-effect relative isolate flex h-[60px] w-[60px] cursor-pointer items-center justify-center overflow-hidden rounded-full bg-body-color text-[20px] font-semibold text-white shadow-[inset_0_0_0_1px_var(--color-ebony-clay-800)] duration-350 [--circle-bg-color:var(--color-chetwode-blue-600)] md:h-[45px] md:w-[45px] xs:h-[35px] xs:w-[35px] [&.active]:pointer-events-none [&.active]:bg-ebony-clay-800 [&.completed>.check>svg]:scale-100 [&.completed>.check>svg]:opacity-100 [&.completed>.check]:opacity-100 [&.completed]:shadow-none"
           >
             <span class="relative z-10 block md:text-[14px] xs:text-[12px]">
-              {{ i + 1 }}
+              {{ i }}
             </span>
             <div
               class="check absolute left-0 top-0 z-20 flex h-full w-full items-center justify-center rounded-full bg-body-color opacity-0 duration-350 after:absolute after:left-0 after:top-0 after:h-full after:w-full after:rounded-full after:shadow-[inset_0_0_0_2px_var(--color-dull-lavender-400)] after:[mask-image:linear-gradient(180deg,_black,_transparent)]"
@@ -38,7 +40,7 @@
   </article>
 
   <article
-    class="form-content pt-[90px] xl:pt-[75px] lg:pt-[60px] md:pt-[45px]"
+    class="form-content pt-[90px] pb-20 xl:pt-[75px] lg:pt-[60px] md:pt-[45px]"
   >
     <div class="wrapper relative mx-auto max-w-[991px] px-[30px]">
       <form action="" class="w-full">
@@ -59,8 +61,6 @@ const setHeight = () => {
     ".form-content .steps .step.active"
   ) as HTMLElement;
 
-  console.log(activeStep);
-
   if (activeStep) {
     const steps = document.querySelector(".form-content .steps") as HTMLElement;
 
@@ -74,20 +74,53 @@ onMounted(() => {
   });
 });
 
+const props = defineProps({
+  start: {
+    type: Number,
+    default: 0,
+  },
+});
+
 const steps: Steps = reactive({
-  value: 1,
-  stepsCount: 0,
-  addStep: () => steps.stepsCount++,
-  getRecentStep: () => steps.stepsCount,
+  value: props.start,
+  items: [],
+  onAdd: null,
+  onRemove: null,
+  go: (step: number) => {
+    steps.value = step;
+
+    nextTick(() => {
+      setHeight();
+    });
+  },
+  removeStep: (index: number) => {
+    steps.items.splice(index, 1);
+
+    if (typeof steps.onRemove === "function") steps.onRemove(index);
+  },
+  onRemoveStep(cbx) {
+    steps.onRemove = cbx;
+  },
+  onAddStep(cbx) {
+    steps.onAdd = cbx;
+  },
+  addStep: (title: string, toIndex: number): number => {
+    steps.items.splice(toIndex, 0, { title });
+
+    if (typeof steps.onAdd === "function") steps.onAdd(toIndex);
+
+    return toIndex;
+  },
   nextStep: () => {
-    steps.stepsCount === steps.value ? steps.value : steps.value++;
+    steps.value =
+      steps.value === steps.items.length - 1 ? steps.value : ++steps.value;
 
     nextTick(() => {
       setHeight();
     });
   },
   prevStep: () => {
-    steps.value === 1 ? steps.value : steps.value--;
+    steps.value = steps.value === 1 ? steps.value : --steps.value;
 
     nextTick(() => {
       setHeight();
