@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // @ts-ignore
 import Form from "form-backend-validation";
-import { ref, reactive } from "vue";
+import { reactive } from "vue";
 
 const props = defineProps({
   baseURL: {

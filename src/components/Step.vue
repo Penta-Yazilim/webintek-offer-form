@@ -1,5 +1,6 @@
 <template>
 	<div :class="{ 'active': active }"
+		:id="`step-${stepNumber}`"
 		class="step absolute duration-450 [&.active]:delay-200 left-0 top-0 w-full opacity-0 translate-y-[30px] invisible pointer-events-none [&.active]:opacity-100 [&.active]:visible [&.active]:pointer-events-auto [&.active]:translate-y-0">
 		<div class="text-editor text-center w-full mx-auto relative z-2 mb-[60px]">
 			<h1>

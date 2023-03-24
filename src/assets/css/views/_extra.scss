@@ -97,14 +97,6 @@
 .iti input {
   padding-left: 90px !important;
 }
-.iti__flag {
-  background-image: url("../../image/source/flags.png");
-}
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .iti__flag {
-    background-image: url("../../image/source/flags@2x.png");
-  }
-}
 .vti__dropdown{
   width: 90px;
   height: 81px;

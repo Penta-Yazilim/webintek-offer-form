@@ -1,3 +1,8 @@
+import axios from 'axios';
+
+// @ts-ignore
+window.axios = axios;
+
 import { createApp } from 'vue'
 import './assets/css/style.scss'
 import './assets/css/tailwind.css'
