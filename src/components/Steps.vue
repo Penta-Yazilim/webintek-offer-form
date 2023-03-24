@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide, reactive, nextTick } from "vue";
+import { provide, reactive, nextTick, onMounted } from "vue";
 import Steps from '@/types/steps';
 
 const setHeight = () => {
@@ -52,6 +52,12 @@ const setHeight = () => {
 		steps.style.height = `${activeStep.offsetHeight}px`;
 	}
 }
+
+onMounted(() => {
+	nextTick(() => {
+		setHeight();
+	})
+})
 
 const steps: Steps = reactive({
 	value: 1,

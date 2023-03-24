@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "form-backend-validation": "^2.4.0",
     "vue": "^3.2.47",
     "vue3-tel-input": "^1.0.4"
   },
