@@ -1,6 +1,8 @@
 <template>
   <div
-    :class="{ active: active }"
+    :class="{
+      active: active,
+    }"
     :id="`step-${stepNumber + 1}`"
     class="step pointer-events-none invisible absolute left-0 top-0 w-full translate-y-[30px] opacity-0 duration-450 [&.active]:pointer-events-auto [&.active]:visible [&.active]:translate-y-0 [&.active]:opacity-100 [&.active]:delay-200"
   >
@@ -79,15 +81,15 @@
       </button>
 
       <button
-        v-if="isLastStep"
+        v-else
         :class="{
-          'ponter-events-none cursor-not-allowed opacity-50': form?.processing
+          'ponter-events-none cursor-not-allowed opacity-50': form?.processing,
         }"
         type="submit"
         class="next-step button hover-circle-effect flex-center h-[58px] w-fit rounded-full bg-dull-lavender-500 px-[60px] shadow-[inset_0_0_0_1px_var(--color-dull-lavender-500)] [--circle-bg-color:var(--color-chetwode-blue-600)] md:px-[45px] sm:px-[30px]"
       >
         <div class="text relative z-10 text-[14px] tracking-widest text-white">
-          DEVAM ET
+          FORMU GÖNDER
         </div>
         <svg
           v-if="loaders.next"
@@ -144,6 +146,8 @@ const loaders = reactive({
   prev: false,
 });
 
+const form = inject<any | null>("form");
+
 watch(
   () => props.index,
   (value) => {
@@ -152,7 +156,7 @@ watch(
 );
 
 const isLastStep = computed(() => {
-  return steps?.items.length === stepNumber.value;
+  return (steps?.items.length ?? 0) - 1 === stepNumber.value;
 });
 
 onMounted(() => {

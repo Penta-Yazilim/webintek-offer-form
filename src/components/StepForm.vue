@@ -2,7 +2,8 @@
 import CustomSelect from "@/components/CustomSelect.vue";
 import Steps from "@/components/Steps.vue";
 import Step from "@/components/Step.vue";
-import { nextTick, onMounted, reactive, watch } from "vue";
+import { nextTick, onMounted, reactive, watch, ref, computed } from "vue";
+import locations from "@/data/locations.json";
 
 // @ts-ignore
 import Form from "form-backend-validation";
@@ -16,6 +17,8 @@ const props = defineProps({
   },
 });
 
+const refSteps = ref<any>(null);
+
 const form = reactive(
   new Form({
     for: "company",
@@ -27,6 +30,9 @@ const form = reactive(
     desc: null,
     _service: null,
     _languages: [],
+    site_address: null,
+    company_name: null,
+    company_position: null,
     city: "",
     district: "",
   })
@@ -37,7 +43,58 @@ async function submitForm() {
     const data = await form.post(`${props.baseURL}/service-form`);
 
     emit("showSuccess", data.message);
-  } catch (error) {}
+  } catch (error: any) {
+    const { response } = error;
+
+    if (response.status === 422) {
+      const { errors } = response.data;
+
+      const stepInputs = {
+        0: ["for"],
+        1: ["_service"],
+        2: ["desc", "_languages", "site_address"],
+        3:
+          form.for === "company"
+            ? ["company_name", "company_position"]
+            : [
+                "name",
+                "last_name",
+                "phone_number",
+                "email_address",
+                "city",
+                "district",
+              ],
+        4: [
+          "name",
+          "last_name",
+          "phone_number",
+          "email_address",
+          "city",
+          "district",
+        ],
+      };
+
+      const step = Object.keys(stepInputs).find((values, key: number) => {
+        return stepInputs[key as keyof typeof stepInputs].some((input) => {
+          return errors[input];
+        });
+      });
+
+      const stepErrors = Object.keys(stepInputs).map((values, key: number) => {
+        return stepInputs[key as keyof typeof stepInputs]
+          .map((input) => {
+            return errors[input] ?? null;
+          })
+          .filter((error) => error);
+      });
+
+      refSteps.value.steps.setErrors(stepErrors);
+
+      if (step) {
+        refSteps.value.steps.go(Number(step));
+      }
+    }
+  }
 }
 
 watch(
@@ -140,10 +197,40 @@ async function setTabContent(setHeightOfSteps = true) {
     setHeight();
   }
 }
+
+const cities = ref<any>([]);
+
+const districts = ref<any>([]);
+
+const setLocations = async () => {
+  const { data } = locations;
+
+  cities.value = data
+    .map((city: any) => {
+      return {
+        ...city,
+        nufus: parseInt(city.nufus.replaceAll(".", "")),
+      };
+    })
+    .sort((a: any, b: any) => b.nufus - a.nufus);
+
+  districts.value = data.flatMap((city: any) => city.ilceler);
+};
+
+const getDistricts = computed(() => {
+  return districts.value.filter((district: any) => {
+    return (
+      district.il_adi.toLowerCase().replaceAll("i̇", "i") ==
+      form.city.toLowerCase().replaceAll("i̇", "i")
+    );
+  });
+});
+
+setLocations();
 </script>
 
 <template>
-  <Steps :start="4">
+  <Steps :form="form" @submit="submitForm" ref="refSteps">
     <Step :index="0" title="Bu projeyi kimin için yapacağız?">
       <div
         class="custom-check-field mx-auto grid max-w-[575px] grid-cols-2 gap-[50px] md:gap-[40px] sm:grid-cols-1 sm:gap-[30px]"
@@ -227,6 +314,13 @@ async function setTabContent(setHeightOfSteps = true) {
     </Step>
 
     <Step :index="1" title="İstediğiniz hizmetler hangileri?">
+      <p
+        class="my-2 text-center text-lg text-pink-600"
+        v-if="form.errors.has('_service')"
+      >
+        {{ form.errors.first("_service") }}
+      </p>
+
       <div class="c-check-tabs">
         <div
           class="relative mx-auto mb-[90px] flex max-w-[825px] items-center justify-center gap-[45px] lg:mb-[75px] md:mb-[60px] sm:mb-[45px] xs:gap-[30px]"
@@ -300,7 +394,7 @@ async function setTabContent(setHeightOfSteps = true) {
                 >
                   <img
                     class="block h-[25px] w-[25px] object-contain object-center"
-                    :src="item.image"
+                    :src="item.image.href"
                   />
                 </div>
                 <h3 class="py-2 text-center text-xl font-extralight leading-5">
@@ -348,7 +442,7 @@ async function setTabContent(setHeightOfSteps = true) {
                 >
                   <img
                     class="block h-[25px] w-[25px] object-contain object-center"
-                    :src="item.image"
+                    :src="item.image.href"
                   />
                 </div>
                 <h3 class="py-2 text-center text-xl font-extralight leading-5">
@@ -404,6 +498,7 @@ async function setTabContent(setHeightOfSteps = true) {
           label="Dil Seçeneği"
           placeholder="Projenizdeki dil seçenekleri nelerdir?"
           multiple
+          :error="form.errors.first('_languages')"
           v-model="form._languages"
           :options="[
             {
@@ -510,6 +605,7 @@ async function setTabContent(setHeightOfSteps = true) {
             type="text"
             id="company-position"
             placeholder="Görevinizi yazınız."
+            v-model="form.company_position"
             :class="{
               '!shadow-pink-600 ring-0 ring-offset-0':
                 form.errors.has('company_position'),
@@ -620,31 +716,32 @@ async function setTabContent(setHeightOfSteps = true) {
           <input
             type="email"
             id="email"
+            v-model="form.email_address"
             :class="{
-              '!shadow-pink-600 ring-0 ring-offset-0': form.errors.has('email'),
+              '!shadow-pink-600 ring-0 ring-offset-0':
+                form.errors.has('email_address'),
             }"
             placeholder="E-Posta adresinizi yazınız"
             class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
           />
           <label
-            for="email"
-            :class="{ '!text-pink-600': form.errors.has('email') }"
+            :class="{ '!text-pink-600': form.errors.has('email_address') }"
             class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
             >E-Posta</label
           >
 
           <p
             class="mt-[5px] text-[14px] font-extralight text-pink-600 duration-350"
-            v-if="form.errors.has('email')"
+            v-if="form.errors.has('email_address')"
           >
-            {{ form.errors.first("email") }}
+            {{ form.errors.first("email_address") }}
           </p>
         </div>
 
         <div class="form-el">
           <select
-            id="city"
             class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 invalid:text-black hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
+            v-model="form.city"
             :class="{
               '!shadow-pink-600 ring-0 ring-offset-0': form.errors.has('city'),
             }"
@@ -652,12 +749,15 @@ async function setTabContent(setHeightOfSteps = true) {
             <option class="bg-body-color text-white" selected disabled value="">
               Bulunduğunuz şehri seçiniz
             </option>
-            <option class="bg-body-color text-white" value="1">Şehir 1</option>
-            <option class="bg-body-color text-white" value="2">Şehir 2</option>
-            <option class="bg-body-color text-white" value="3">Şehir 3</option>
+            <option
+              class="bg-body-color text-white"
+              :value="city.il_adi"
+              v-for="city in cities"
+            >
+              {{ city.il_adi }}
+            </option>
           </select>
           <label
-            for="city"
             :class="{ '!text-pink-600': form.errors.has('city') }"
             class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
             >Şehir</label
@@ -677,20 +777,29 @@ async function setTabContent(setHeightOfSteps = true) {
         <div class="form-el">
           <select
             class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 invalid:text-black hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
+            v-model="form.district"
             :class="{
               '!shadow-pink-600 ring-0 ring-offset-0':
                 form.errors.has('district'),
+              'cursor-not-allowed opacity-50': !form.city || !getDistricts,
             }"
+            :disabled="!form.city || !getDistricts"
           >
             <option class="bg-body-color text-white" selected disabled value="">
               Bulunduğunuz semti seçiniz
             </option>
-            <option class="bg-body-color text-white" value="1">Semt 1</option>
-            <option class="bg-body-color text-white" value="2">Semt 2</option>
-            <option class="bg-body-color text-white" value="3">Semt 3</option>
+            <option
+              class="bg-body-color text-white"
+              v-for="district in getDistricts"
+              :value="district.ilce_adi"
+            >
+              {{ district.ilce_adi }}
+            </option>
           </select>
           <label
-            :class="{ '!text-pink-600': form.errors.has('district') }"
+            :class="{
+              '!text-pink-600': form.errors.has('district'),
+            }"
             class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
             >Semt</label
           >

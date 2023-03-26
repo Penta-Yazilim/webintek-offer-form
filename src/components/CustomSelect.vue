@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps, onMounted, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 interface Option {
   label: string;
@@ -13,6 +13,10 @@ const emit = defineEmits(["update:model-value"]);
 const props = defineProps({
   modelValue: {
     type: [String, Array] as unknown as () => string | string[] | null,
+    default: "",
+  },
+  error: {
+    type: String,
     default: "",
   },
   options: {
@@ -128,7 +132,10 @@ function isSelected(option: Option) {
     >
       <div
         class="box flex h-[80px] w-full items-center rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-lynch-500 shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 focus:ring-0 focus:ring-offset-0"
-        :class="{ '!text-white': selectedOptions.length > 0 }"
+        :class="{ 
+          '!text-white': selectedOptions.length > 0 ,
+          '!shadow-pink-600': error,
+        }"
       >
         <div class="placeholder">
           {{ placeholderVal }}
@@ -144,7 +151,9 @@ function isSelected(option: Option) {
           @click="($event) => selectOption(option)"
           role="option"
           :aria-selected="isSelected(option)"
-          :class="{ 'is-selected': isSelected(option) }"
+          :class="{ 
+            'is-selected': isSelected(option),
+          }"
           class="item px-[20px] py-[10px] text-lynch-500 duration-350 hover:text-white [&.is-selected]:font-bold [&.is-selected]:text-white [&:not(:first-child)]:border-t-[1px] [&:not(:first-child)]:border-solid [&:not(:first-child)]:border-t-lynch-800/50"
         >
           {{ option.label }}
@@ -153,6 +162,9 @@ function isSelected(option: Option) {
     </div>
     <label
       :for="id"
+      :class="{
+        '!text-pink-600': error,
+      }"
       class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
     >
       {{ label }}
@@ -160,5 +172,9 @@ function isSelected(option: Option) {
     <div
       class="icon icon-chevron-bottom absolute right-[30px] top-[34px] h-[16px] text-[16px] leading-none text-white"
     ></div>
+
+    <p class="mt-2 text-sm text-pink-600" v-if="error">
+      {{ error }}
+    </p>
   </div>
 </template>

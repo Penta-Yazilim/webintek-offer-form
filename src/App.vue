@@ -29,7 +29,7 @@ function showSuccess() {
 
   <Transition name="fade" mode="out-in">
     <div v-if="type === 'project'" class="w-full overflow-hidden">
-      <StepForm :baseURL="baseURL" />
+      <StepForm :baseURL="baseURL" @show-success="showSuccess" />
     </div>
   </Transition>
 

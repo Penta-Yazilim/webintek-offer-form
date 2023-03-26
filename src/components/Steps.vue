@@ -14,6 +14,7 @@
             :class="{
               active: i - 1 === steps.value,
               completed: i - 1 < steps.value,
+              '!shadow-pink-600': hasError(i - 1),
             }"
             class="item hover-circle-effect relative isolate flex h-[60px] w-[60px] cursor-pointer items-center justify-center overflow-hidden rounded-full bg-body-color text-[20px] font-semibold text-white shadow-[inset_0_0_0_1px_var(--color-ebony-clay-800)] duration-350 [--circle-bg-color:var(--color-chetwode-blue-600)] md:h-[45px] md:w-[45px] xs:h-[35px] xs:w-[35px] [&.active]:pointer-events-none [&.active]:bg-ebony-clay-800 [&.completed>.check>svg]:scale-100 [&.completed>.check>svg]:opacity-100 [&.completed>.check]:opacity-100 [&.completed]:shadow-none"
           >
@@ -21,6 +22,9 @@
               {{ i }}
             </span>
             <div
+              :class="{
+                'after:shadow-pink-600': hasError(i - 1),
+              }"
               class="check absolute left-0 top-0 z-20 flex h-full w-full items-center justify-center rounded-full bg-body-color opacity-0 duration-350 after:absolute after:left-0 after:top-0 after:h-full after:w-full after:rounded-full after:shadow-[inset_0_0_0_2px_var(--color-dull-lavender-400)] after:[mask-image:linear-gradient(180deg,_black,_transparent)]"
             >
               <svg
@@ -43,7 +47,7 @@
     class="form-content pt-[90px] pb-20 xl:pt-[75px] lg:pt-[60px] md:pt-[45px]"
   >
     <div class="wrapper relative mx-auto max-w-[991px] px-[30px]">
-      <form action="" class="w-full">
+      <form @submit.prevent="$emit('submit')" class="w-full">
         <div class="steps relative duration-600">
           <slot></slot>
         </div>
@@ -79,6 +83,10 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  form: {
+    type: Object,
+    default: {},
+  },
 });
 
 const steps: Steps = reactive({
@@ -86,6 +94,10 @@ const steps: Steps = reactive({
   items: [],
   onAdd: null,
   onRemove: null,
+  errors: [],
+  setErrors: (errors: Array<Array<string>>) => {
+    steps.errors = errors;
+  },
   go: (step: number) => {
     steps.value = step;
 
@@ -128,5 +140,16 @@ const steps: Steps = reactive({
   },
 });
 
+const hasError = function (stepNumber: number) {
+  const val = steps?.errors[stepNumber] ?? [];
+
+  return val.length > 0;
+};
+
 provide("steps", steps);
+provide("form", props.form);
+
+defineExpose({
+  steps,
+});
 </script>
