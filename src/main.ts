@@ -7,6 +7,7 @@ import { createApp } from 'vue'
 import './assets/css/style.scss'
 import './assets/css/tailwind.css'
 import App from './App.vue'
+import ContactFormApp from './ContactFormApp.vue'
 import 'vue3-tel-input/dist/vue3-tel-input.css'
 // @ts-ignore
 import VueTelInput from 'vue3-tel-input'
@@ -48,3 +49,9 @@ app.directive('click-outside', {
 })
 
 app.mount('#offer-form-module')
+
+const contactFormApp = createApp(ContactFormApp);
+
+contactFormApp.use(VueTelInput);
+
+contactFormApp.mount('#contact-form-module')

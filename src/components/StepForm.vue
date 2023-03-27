@@ -35,6 +35,7 @@ const form = reactive(
     company_position: null,
     city: "",
     district: "",
+    agreement: false,
   })
 );
 
@@ -230,7 +231,7 @@ setLocations();
 </script>
 
 <template>
-  <Steps :form="form" @submit="submitForm" ref="refSteps">
+  <Steps :form="form" @submit="submitForm" ref="refSteps" :start="4">
     <Step :index="0" title="Bu projeyi kimin için yapacağız?">
       <div
         class="custom-check-field mx-auto grid max-w-[575px] grid-cols-2 gap-[50px] md:gap-[40px] sm:grid-cols-1 sm:gap-[30px]"
@@ -537,31 +538,6 @@ setLocations();
             {{ form.errors.first("site_address") }}
           </p>
         </div>
-
-        <!-- <div
-          class="form-el col-span-2 flex items-center justify-center gap-[30px] sm:col-span-1"
-        >
-          <input
-            type="checkbox"
-            id="acceptance"
-            placeholder="E-Posta adresinizi yazınız"
-            class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
-          />
-          <div
-            class="box relative h-[40px] w-[40px] shrink-0 rounded-[10px] border-0 bg-transparent shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 before:absolute before:left-[50%] before:top-[50%] before:h-[40%] before:w-[40%] before:translate-x-[-50%] before:translate-y-[-50%] before:scale-0 before:rounded-[5px] before:bg-primary before:opacity-0 before:duration-350 peer-checked:!shadow-[0_0_0_1px_var(--color-primary)] peer-checked:before:!scale-100 peer-checked:before:!opacity-100 peer-hover:shadow-[0_0_0_1px_var(--color-lynch-600)]"
-          ></div>
-          <label
-            for="acceptance"
-            class="font-extralight leading-normal text-lynch-500 duration-350"
-            ><a
-              href="#kvkk-popup"
-              class="relative z-20 inline-block font-semibold text-lynch-400 duration-350 hover:text-white"
-              data-fancybox
-              >KVKK şartlarını</a
-            >
-            okudum ve kabul ediyorum.</label
-          >
-        </div> -->
       </div>
     </Step>
 
@@ -813,6 +789,47 @@ setLocations();
           >
             {{ form.errors.first("district") }}
           </p>
+        </div>
+
+        <div
+          class="form-el col-span-2 flex items-center justify-center gap-[30px] sm:col-span-1"
+        >
+          <input
+            type="checkbox"
+            id="agreement"
+            v-model="form.agreement"
+            placeholder="E-Posta adresinizi yazınız"
+            class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
+          />
+
+          <div
+            :class="{
+              '!shadow-pink-600': form.errors.has('agreement'),
+            }"
+            class="box relative h-[40px] w-[40px] shrink-0 rounded-[10px] border-0 bg-transparent shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 before:absolute before:left-[50%] before:top-[50%] before:h-[40%] before:w-[40%] before:translate-x-[-50%] before:translate-y-[-50%] before:scale-0 before:rounded-[5px] before:bg-primary before:opacity-0 before:duration-350 peer-checked:!shadow-[0_0_0_1px_var(--color-primary)] peer-checked:before:!scale-100 peer-checked:before:!opacity-100 peer-hover:shadow-[0_0_0_1px_var(--color-lynch-600)]"
+          ></div>
+
+          <div class="flex flex-col">
+            <label
+              :class="{ '!text-pink-600': form.errors.has('agreement') }"
+              for="agreement"
+              class="font-extralight leading-normal text-lynch-500 duration-350"
+              ><a
+                href="#kvkk-popup"
+                class="relative z-20 inline-block font-semibold text-lynch-400 duration-350 hover:text-white"
+                data-fancybox
+                >KVKK şartlarını</a
+              >
+              okudum ve kabul ediyorum.</label
+            >
+
+            <p
+              class="mt-2 text-sm text-pink-600"
+              v-if="form.errors.has('agreement')"
+            >
+              {{ form.errors.first("agreement") }}
+            </p>
+          </div>
         </div>
       </div>
     </Step>

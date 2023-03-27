@@ -3,41 +3,26 @@
 import Form from "form-backend-validation";
 import { reactive } from "vue";
 
-const props = defineProps({
-  baseURL: {
-    type: String,
-    required: true,
-  },
-});
+const baseURL =
+  // @ts-ignore
+  process.env.NODE_ENV === "development"
+    ? "https://webintek-crm.test/api"
+    : "//destek.webintek.com.tr/api";
 
-const emit = defineEmits(["showSuccess"]);
-
-const quickForm = reactive(
+const contactForm = reactive(
   new Form({
     name: null,
     last_name: null,
     email_address: null,
     phone_number: null,
-    company_name: null,
+    subject: null,
     desc: null,
-    agreement: false,
   })
 );
 
-async function submitQuickForm() {
+async function submit() {
   try {
-    const fullName = quickForm.name?.split(" ") ?? [];
-
-    const name = fullName[0] ?? null;
-
-    quickForm.populate({
-      name: name,
-      last_name: fullName[1] ?? (name ? " - " : null),
-    });
-
-    const data = await quickForm.post(`${props.baseURL}/quick-form`);
-
-    emit("showSuccess", data.message);
+    const data = await contactForm.post(`${baseURL}/contact`);
   } catch (error) {}
 }
 </script>
@@ -45,80 +30,50 @@ async function submitQuickForm() {
 <template>
   <article class="container pt-[90px] xl:pt-[30px]">
     <div class="relative mx-auto w-full max-w-5xl px-[30px] text-center">
-      <h1 class="text-4xl font-extralight">Hızlı Teklif Al</h1>
-      <p class="mt-10 text-xl font-extralight text-[#6D7E9B]">
-        Etkileyici, kullanışlı, benzersiz, her zaman modern projeler üretiyoruz.
-        Dijital dünyadaki görsel şovlarda ne yapılması gerektiğini çok iyi
-        biliyoruz. Müşterilerimizi çok iyi dinliyor.
-      </p>
+      <h1 class="text-4xl font-extralight">İletişim Formu</h1>
     </div>
   </article>
 
-  <form @submit.prevent="submitQuickForm" class="w-full px-12">
+  <form @submit.prevent="submit" class="w-full">
     <div
       class="form-field mx-auto mt-20 grid max-w-[991px] grid-cols-2 gap-x-[30px] gap-y-[45px] sm:grid-cols-1"
     >
       <div class="form-el">
         <input
           type="text"
-          v-model="quickForm.name"
+          v-model="contactForm.name"
           placeholder="Adınız Soyadınız"
           class="h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
           :class="{
             '!shadow-pink-600 ring-0 ring-offset-0':
-              quickForm.errors.has('name'),
+              contactForm.errors.has('name'),
           }"
         />
         <label
           for="name"
           class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-          :class="{ '!text-pink-600': quickForm.errors.has('name') }"
+          :class="{ '!text-pink-600': contactForm.errors.has('name') }"
         >
           Ad Soyad
         </label>
 
         <p
           class="mt-2 text-sm text-pink-600"
-          v-if="quickForm.errors.has('name')"
+          v-if="contactForm.errors.has('name')"
         >
-          {{ quickForm.errors.first("name") }}
-        </p>
-      </div>
-
-      <div class="form-el">
-        <vue-tel-input
-          :input-options="{ placeholder: '0553  107  93  64' }"
-          @input="($: any,phoneObject: any|null) => {
-            quickForm.phone_number = phoneObject?.number;
-          }"
-          :class="{
-            error: quickForm.errors.has('phone_number'),
-          }"
-        />
-        <label
-          class="absolute left-[15px] top-0 z-[999] translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-          :class="{ '!text-pink-600': quickForm.errors.has('phone_number') }"
-        >
-          Telefon
-        </label>
-
-        <p
-          class="mt-2 text-sm text-pink-600"
-          v-if="quickForm.errors.has('phone_number')"
-        >
-          {{ quickForm.errors.first("phone_number") }}
+          {{ contactForm.errors.first("name") }}
         </p>
       </div>
 
       <div class="form-el">
         <input
           type="email"
-          v-model="quickForm.email_address"
+          v-model="contactForm.email_address"
           placeholder="E-Posta adresinizi yazınız"
           class="h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
           :class="{
             '!shadow-pink-600 ring-0 ring-offset-0':
-              quickForm.errors.has('email_address'),
+              contactForm.errors.has('email_address'),
           }"
         />
         <label
@@ -128,112 +83,96 @@ async function submitQuickForm() {
 
         <p
           class="mt-2 text-sm text-pink-600"
-          v-if="quickForm.errors.has('email_address')"
+          v-if="contactForm.errors.has('email_address')"
         >
-          {{ quickForm.errors.first("email_address") }}
+          {{ contactForm.errors.first("email_address") }}
+        </p>
+      </div>
+
+      <div class="form-el">
+        <vue-tel-input
+          :input-options="{ placeholder: '0553  107  93  64' }"
+          @input="($: any,phoneObject: any|null) => {
+            contactForm.phone_number = phoneObject?.number;
+          }"
+          :class="{
+            error: contactForm.errors.has('phone_number'),
+          }"
+        />
+        <label
+          class="absolute left-[15px] top-0 z-[999] translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
+          :class="{ '!text-pink-600': contactForm.errors.has('phone_number') }"
+        >
+          Telefon
+        </label>
+
+        <p
+          class="mt-2 text-sm text-pink-600"
+          v-if="contactForm.errors.has('phone_number')"
+        >
+          {{ contactForm.errors.first("phone_number") }}
         </p>
       </div>
 
       <div class="form-el">
         <input
           type="text"
-          v-model="quickForm.company_name"
+          v-model="contactForm.company_name"
           placeholder="Firmanızın adını yazınız"
           class="h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
           :class="{
             '!shadow-pink-600 ring-0 ring-offset-0':
-              quickForm.errors.has('company_name'),
+              contactForm.errors.has('company_name'),
           }"
         />
         <label
           for="company-name"
           class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-          :class="{ '!text-pink-600': quickForm.errors.has('company_name') }"
+          :class="{ '!text-pink-600': contactForm.errors.has('company_name') }"
           >Firma Adı
         </label>
 
         <p
           class="mt-2 text-sm text-pink-600"
-          v-if="quickForm.errors.has('company_name')"
+          v-if="contactForm.errors.has('company_name')"
         >
-          {{ quickForm.errors.first("company_name") }}
+          {{ contactForm.errors.first("company_name") }}
         </p>
       </div>
 
       <div class="form-el col-span-full">
         <textarea
-          v-model="quickForm.desc"
+          v-model="contactForm.desc"
           placeholder="Pojeniz hakkında bize bilgi verebilir misiniz?"
           class="peer h-[200px] w-full rounded-[10px] border-0 bg-transparent p-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
           :class="{
             '!shadow-pink-600 ring-0 ring-offset-0':
-              quickForm.errors.has('desc'),
+              contactForm.errors.has('desc'),
           }"
         ></textarea>
         <label
           class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-          :class="{ '!text-pink-600': quickForm.errors.has('desc') }"
+          :class="{ '!text-pink-600': contactForm.errors.has('desc') }"
         >
           Proje Bilgileri
         </label>
 
         <p
           class="mt-2 text-sm text-pink-600"
-          v-if="quickForm.errors.has('desc')"
+          v-if="contactForm.errors.has('desc')"
         >
-          {{ quickForm.errors.first("desc") }}
+          {{ contactForm.errors.first("desc") }}
         </p>
       </div>
     </div>
 
     <div
-      class="button-field mt-[60px] flex items-center justify-center gap-56 sm:mt-[45px] sm:flex-col sm:gap-[30px]"
+      class="button-field mt-[60px] flex items-center justify-center gap-[50px] sm:mt-[45px] sm:gap-[30px] xs:flex-col-reverse"
     >
-      <div
-        class="form-el col-span-2 flex items-center justify-center gap-[30px] sm:col-span-1"
-      >
-        <input
-          type="checkbox"
-          id="agreement"
-          v-model="quickForm.agreement"
-          placeholder="E-Posta adresinizi yazınız"
-          class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
-        />
-
-        <div
-          :class="{
-            '!shadow-pink-600': quickForm.errors.has('agreement'),
-          }"
-          class="box relative h-[40px] w-[40px] shrink-0 rounded-[10px] border-0 bg-transparent shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 before:absolute before:left-[50%] before:top-[50%] before:h-[40%] before:w-[40%] before:translate-x-[-50%] before:translate-y-[-50%] before:scale-0 before:rounded-[5px] before:bg-primary before:opacity-0 before:duration-350 peer-checked:!shadow-[0_0_0_1px_var(--color-primary)] peer-checked:before:!scale-100 peer-checked:before:!opacity-100 peer-hover:shadow-[0_0_0_1px_var(--color-lynch-600)]"
-        ></div>
-
-        <div class="flex flex-col">
-          <label
-            :class="{ '!text-pink-600': quickForm.errors.has('agreement') }"
-            for="agreement"
-            class="font-extralight leading-normal text-lynch-500 duration-350"
-            ><a
-              href="#kvkk-popup"
-              class="relative z-20 inline-block font-semibold text-lynch-400 duration-350 hover:text-white"
-              data-fancybox
-              >KVKK şartlarını</a
-            >
-            okudum ve kabul ediyorum.</label
-          >
-
-          <p
-            class="mt-2 text-sm text-pink-600"
-            v-if="quickForm.errors.has('agreement')"
-          >
-            {{ quickForm.errors.first("agreement") }}
-          </p>
-        </div>
-      </div>
-
       <button
         :class="{
           'ponter-events-none cursor-not-allowed opacity-50':
-            quickForm.processing,
+            contactForm.processing,
         }"
         type="submit"
         class="next-step button hover-circle-effect flex-center h-[58px] w-fit rounded-full bg-dull-lavender-500 px-[60px] shadow-[inset_0_0_0_1px_var(--color-dull-lavender-500)] [--circle-bg-color:var(--color-chetwode-blue-600)] md:px-[45px] sm:px-[30px]"
@@ -242,7 +181,7 @@ async function submitQuickForm() {
           FORMU GÖNDER
         </div>
         <svg
-          v-if="quickForm.processing"
+          v-if="contactForm.processing"
           aria-hidden="true"
           role="status"
           class="ml-3 inline h-4 w-4 animate-spin text-white"
