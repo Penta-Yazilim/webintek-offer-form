@@ -17,6 +17,7 @@ const contactForm = reactive(
     email_address: null,
     phone_number: null,
     desc: null,
+    agreement: false,
   })
 );
 
