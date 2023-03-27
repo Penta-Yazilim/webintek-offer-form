@@ -1,3 +1,19 @@
+<script setup lang="ts">
+import { defineProps } from "vue";
+
+defineProps({
+  title: {
+    type: String,
+    default: "Teklif al formu gönderilmiştir.",
+  },
+  description: {
+    type: String,
+    default:
+      "Müşteri temsilcimiz en kısa sürede sizlere geri dönüş sağlayacaktır.",
+  },
+});
+</script>
+
 <template>
   <div
     class="sm:pt-30 container flex h-full flex-col items-center justify-center pt-52 pb-20"
@@ -52,10 +68,10 @@
     </svg>
 
     <h2 class="mt-16 text-4xl font-extralight text-white">
-      Teklif al formu gönderilmiştir.
+      {{ title }}
     </h2>
-    <p class="text-lg font-extralight text-[#6D7E9B] mt-10">
-      Müşteri temsilcimiz en kısa sürede sizlere geri dönüş sağlayacaktır.
+    <p class="mt-10 text-lg font-extralight text-[#6D7E9B]">
+      {{ description }}
     </p>
   </div>
 </template>
