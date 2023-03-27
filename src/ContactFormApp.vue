@@ -15,7 +15,7 @@ const contactForm = reactive(
     last_name: null,
     email_address: null,
     phone_number: null,
-    subject: null,
+    contact_type: "",
     desc: null,
   })
 );
@@ -25,12 +25,14 @@ async function submit() {
     const data = await contactForm.post(`${baseURL}/contact`);
   } catch (error) {}
 }
+
+const subjects = ["Bilgi Talebi", "Teknik Destek", "Teklif", "Diğer"];
 </script>
 
 <template>
   <article class="container pt-[90px] xl:pt-[30px]">
     <div class="relative mx-auto w-full max-w-5xl px-[30px] text-center">
-      <h1 class="text-4xl font-extralight">İletişim Formu</h1>
+      <h1 class="text-5xl font-extralight">İletişim Formu</h1>
     </div>
   </article>
 
@@ -115,28 +117,41 @@ async function submit() {
       </div>
 
       <div class="form-el">
-        <input
-          type="text"
-          v-model="contactForm.company_name"
-          placeholder="Firmanızın adını yazınız"
-          class="h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
+        <select
+          class="peer h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 invalid:text-black hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
+          v-model="contactForm.contact_type"
           :class="{
             '!shadow-pink-600 ring-0 ring-offset-0':
-              contactForm.errors.has('company_name'),
+              contactForm.errors.has('contact_type'),
           }"
-        />
+        >
+          <option class="bg-body-color text-white" selected disabled value="">
+            Buradan konu seçin
+          </option>
+          <option
+            class="bg-body-color text-white"
+            :value="subject"
+            v-for="subject in subjects"
+          >
+            {{ subject }}
+          </option>
+        </select>
         <label
           for="company-name"
           class="absolute left-[15px] top-0 translate-y-[-50%] whitespace-nowrap bg-body-color px-[15px] text-[14px] font-extralight leading-none text-white duration-350 focus:text-primary peer-focus:font-bold peer-focus:text-primary"
-          :class="{ '!text-pink-600': contactForm.errors.has('company_name') }"
-          >Firma Adı
+          :class="{ '!text-pink-600': contactForm.errors.has('contact_type') }"
+          >Konu
         </label>
+
+        <div
+          class="icon icon-chevron-bottom absolute right-[30px] top-[34px] h-[16px] text-[16px] leading-none text-white"
+        ></div>
 
         <p
           class="mt-2 text-sm text-pink-600"
-          v-if="contactForm.errors.has('company_name')"
+          v-if="contactForm.errors.has('contact_type')"
         >
-          {{ contactForm.errors.first("company_name") }}
+          {{ contactForm.errors.first("contact_type") }}
         </p>
       </div>
 
@@ -167,15 +182,56 @@ async function submit() {
     </div>
 
     <div
-      class="button-field mt-[60px] flex items-center justify-center gap-[50px] sm:mt-[45px] sm:gap-[30px] xs:flex-col-reverse"
+      class="button-field mx-auto mt-[40px] flex max-w-[991px] items-center justify-center gap-20 sm:mt-[45px] sm:gap-[30px]"
     >
+      <div
+        class="form-el flex w-full items-center justify-center gap-[30px] sm:col-span-1"
+      >
+        <input
+          type="checkbox"
+          id="agreement"
+          v-model="contactForm.agreement"
+          placeholder="E-Posta adresinizi yazınız"
+          class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
+        />
+
+        <div
+          :class="{
+            '!shadow-pink-600': contactForm.errors.has('agreement'),
+          }"
+          class="box relative h-[40px] w-[40px] shrink-0 rounded-[10px] border-0 bg-transparent shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 before:absolute before:left-[50%] before:top-[50%] before:h-[40%] before:w-[40%] before:translate-x-[-50%] before:translate-y-[-50%] before:scale-0 before:rounded-[5px] before:bg-primary before:opacity-0 before:duration-350 peer-checked:!shadow-[0_0_0_1px_var(--color-primary)] peer-checked:before:!scale-100 peer-checked:before:!opacity-100 peer-hover:shadow-[0_0_0_1px_var(--color-lynch-600)]"
+        ></div>
+
+        <div class="flex flex-col">
+          <label
+            :class="{ '!text-pink-600': contactForm.errors.has('agreement') }"
+            for="agreement"
+            class="font-extralight leading-normal text-lynch-500 duration-350"
+            ><a
+              href="#kvkk-popup"
+              class="relative z-20 inline-block font-semibold text-lynch-400 duration-350 hover:text-white"
+              data-fancybox
+              >KVKK şartlarını</a
+            >
+            okudum ve kabul ediyorum.</label
+          >
+
+          <p
+            class="mt-2 text-sm text-pink-600"
+            v-if="contactForm.errors.has('agreement')"
+          >
+            {{ contactForm.errors.first("agreement") }}
+          </p>
+        </div>
+      </div>
+
       <button
         :class="{
           'ponter-events-none cursor-not-allowed opacity-50':
             contactForm.processing,
         }"
         type="submit"
-        class="next-step button hover-circle-effect flex-center h-[58px] w-fit rounded-full bg-dull-lavender-500 px-[60px] shadow-[inset_0_0_0_1px_var(--color-dull-lavender-500)] [--circle-bg-color:var(--color-chetwode-blue-600)] md:px-[45px] sm:px-[30px]"
+        class="next-step button hover-circle-effect flex-center flex h-[58px] w-full rounded-full bg-dull-lavender-500 px-[60px] shadow-[inset_0_0_0_1px_var(--color-dull-lavender-500)] [--circle-bg-color:var(--color-chetwode-blue-600)] md:px-[45px] sm:px-[30px]"
       >
         <div class="text relative z-10 text-[14px] tracking-widest text-white">
           FORMU GÖNDER

@@ -231,7 +231,7 @@ setLocations();
 </script>
 
 <template>
-  <Steps :form="form" @submit="submitForm" ref="refSteps" :start="4">
+  <Steps :form="form" @submit="submitForm" ref="refSteps">
     <Step :index="0" title="Bu projeyi kimin için yapacağız?">
       <div
         class="custom-check-field mx-auto grid max-w-[575px] grid-cols-2 gap-[50px] md:gap-[40px] sm:grid-cols-1 sm:gap-[30px]"
