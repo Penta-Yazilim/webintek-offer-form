@@ -44,13 +44,13 @@ const showSuccess = ref(false);
 
 <template>
   <div v-if="!showSuccess" class="flex flex-col">
-    <article class="container pt-[90px] xl:pt-[30px]">
+    <article class="container">
       <div class="relative mx-auto w-full max-w-5xl px-[30px] text-center">
         <h1 class="text-5xl font-extralight">İletişim Formu</h1>
       </div>
     </article>
 
-    <form @submit.prevent="submit" class="w-full pb-20">
+    <form @submit.prevent="submit" class="w-full">
       <div
         class="form-field mx-auto mt-20 grid max-w-[991px] grid-cols-1 gap-x-[30px] gap-y-[45px] sm:grid-cols-1"
       >
@@ -240,7 +240,7 @@ const showSuccess = ref(false);
 
   <Transition name="fade" mode="out-in">
     <div v-if="showSuccess" class="flex w-full overflow-hidden">
-      <SuccessMessage />
+      <SuccessMessage title="İletişim formu başarıyla gönderildi." description="En kısa sürede size geri dönüş yapacağız." />
     </div>
   </Transition>
 </template>
