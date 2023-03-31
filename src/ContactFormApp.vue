@@ -12,6 +12,7 @@ const baseURL =
 
 const contactForm = reactive(
   new Form({
+    fullName: null,
     name: null,
     last_name: null,
     email_address: null,
@@ -23,7 +24,7 @@ const contactForm = reactive(
 
 async function submit() {
   try {
-    const fullName = contactForm.name?.split(" ") ?? [];
+    const fullName = contactForm.fullName?.split(" ") ?? [];
 
     const name = fullName[0];
     const lastName = fullName[1] ?? "-";
@@ -57,7 +58,7 @@ const showSuccess = ref(false);
         <div class="form-el">
           <input
             type="text"
-            v-model="contactForm.name"
+            v-model="contactForm.fullName"
             placeholder="Adınız Soyadınız"
             class="h-[80px] w-full rounded-[10px] border-0 bg-transparent px-[30px] font-extralight text-white shadow-[0_0_0_1px_var(--color-lynch-800)] duration-350 placeholder:text-lynch-500 hover:!shadow-[0_0_0_1px_var(--color-lynch-600)] focus:!shadow-[0_0_0_1px_var(--color-primary)] focus:ring-0 focus:ring-offset-0"
             :class="{
