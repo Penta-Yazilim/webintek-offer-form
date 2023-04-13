@@ -87,6 +87,14 @@ const props = defineProps({
     type: Object,
     default: {},
   },
+  inputs: {
+    type: Object,
+    default: {},
+  },
+  apiUrl: {
+    type: String,
+    default: "",
+  },
 });
 
 const steps: Steps = reactive({
@@ -95,6 +103,8 @@ const steps: Steps = reactive({
   onAdd: null,
   onRemove: null,
   errors: [],
+  apiURL: props.apiUrl,
+  validateInputs: props.inputs,
   setErrors: (errors: Array<Array<string>>) => {
     steps.errors = errors;
   },

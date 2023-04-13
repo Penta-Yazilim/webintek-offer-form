@@ -125,6 +125,7 @@ import {
   onUnmounted,
   computed,
 } from "vue";
+
 import Steps from "@/types/steps";
 
 const props = defineProps({
@@ -202,10 +203,74 @@ function Minimum(
   ]).then((result) => result[0]);
 }
 
+const validate = () => {
+  return new Promise<void>((resolve, reject) => {
+    if (isLastStep.value) {
+      return resolve();
+    }
+
+    //@ts-ignore
+    axios
+      .post(`${steps?.apiURL}/validate-service-form`, form.data())
+      .then((response: any) => {
+        if (response.status === 422) {
+          return response.json().then((data: any) => {
+            throw {
+              response,
+              data,
+            };
+          });
+        }
+
+        return response.json();
+      })
+      .then(() => {
+        resolve();
+      })
+      .catch((error: any) => {
+        reject(error);
+      });
+  });
+};
+
 const next = () => {
   loaders.next = true;
 
-  Minimum(() => steps?.nextStep(), 1000).then(() => {
+  Minimum(async () => {
+    try {
+      await validate();
+
+      steps?.nextStep();
+    } catch (error: any) {
+      const { response } = error;
+      if (response.status === 422) {
+        const { errors } = response.data;
+
+        const stepErrors: any = {};
+
+        const validateInputs = steps?.validateInputs[props.index];
+
+        validateInputs?.forEach((input) => {
+          if (errors[input]) {
+            stepErrors[input] = errors[input];
+          }
+        });
+
+        if (Object.keys(stepErrors).length === 0) {
+          steps?.nextStep();
+
+          form.withErrors({});
+          steps?.setErrors([]);
+        } else {
+          steps?.setErrors({
+            [props.index]: Object.values(stepErrors),
+          });
+
+          form.withErrors(stepErrors);
+        }
+      }
+    }
+  }, 350).then(() => {
     loaders.next = false;
   });
 };

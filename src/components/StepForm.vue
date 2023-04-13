@@ -39,6 +39,32 @@ const form = reactive(
   })
 );
 
+
+const stepInputs = {
+  0: ["for"],
+  1: ["_service"],
+  2: ["desc", "_languages", "site_address"],
+  3:
+    form.for === "company"
+      ? ["company_name", "company_position"]
+      : [
+          "name",
+          "last_name",
+          "phone_number",
+          "email_address",
+          "city",
+          "district",
+        ],
+  4: [
+    "name",
+    "last_name",
+    "phone_number",
+    "email_address",
+    "city",
+    "district",
+  ],
+};
+
 async function submitForm() {
   try {
     const data = await form.post(`${props.baseURL}/service-form`);
@@ -49,31 +75,6 @@ async function submitForm() {
 
     if (response.status === 422) {
       const { errors } = response.data;
-
-      const stepInputs = {
-        0: ["for"],
-        1: ["_service"],
-        2: ["desc", "_languages", "site_address"],
-        3:
-          form.for === "company"
-            ? ["company_name", "company_position"]
-            : [
-                "name",
-                "last_name",
-                "phone_number",
-                "email_address",
-                "city",
-                "district",
-              ],
-        4: [
-          "name",
-          "last_name",
-          "phone_number",
-          "email_address",
-          "city",
-          "district",
-        ],
-      };
 
       const step = Object.keys(stepInputs).find((values, key: number) => {
         return stepInputs[key as keyof typeof stepInputs].some((input) => {
@@ -231,7 +232,7 @@ setLocations();
 </script>
 
 <template>
-  <Steps :form="form" @submit="submitForm" ref="refSteps">
+  <Steps :form="form" @submit="submitForm" ref="refSteps" :inputs="stepInputs" :api-url="props.baseURL">
     <Step :index="0" title="Bu projeyi kimin için yapacağız?">
       <div
         class="custom-check-field mx-auto grid max-w-[575px] grid-cols-2 gap-[50px] md:gap-[40px] sm:grid-cols-1 sm:gap-[30px]"
