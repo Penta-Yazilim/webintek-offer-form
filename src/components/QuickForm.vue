@@ -88,7 +88,7 @@ async function submitQuickForm() {
 
       <div class="form-el">
         <vue-tel-input
-          :input-options="{ placeholder: '0553 107 93 64' }"
+          :input-options="{ placeholder: '05** *** ** **' }"
           @input="($: any,phoneObject: any|null) => {
             quickForm.phone_number = phoneObject?.number;
           }"

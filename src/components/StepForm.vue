@@ -235,7 +235,7 @@ setLocations();
   <Steps :form="form" @submit="submitForm" ref="refSteps" :inputs="stepInputs" :api-url="props.baseURL">
     <Step :index="0" title="Bu projeyi kimin için yapacağız?">
       <div
-        class="custom-check-field mx-auto grid max-w-[575px] grid-cols-2 gap-[50px] md:gap-[40px] sm:grid-cols-1 sm:gap-[30px]"
+        class="custom-check-field mx-auto grid max-w-[600px] grid-cols-2 gap-[50px] md:gap-[40px] sm:grid-cols-1 sm:gap-[30px]"
       >
         <div class="custom-check relative">
           <input
@@ -422,7 +422,7 @@ setLocations();
 
           <div
             :class="{ active: form.service_type === 'partial' }"
-            class="item custom-check-field invisible absolute left-0 top-0 grid w-full max-w-[575px] translate-y-[30px] grid-cols-2 gap-[50px] p-[12px] opacity-0 duration-450 md:gap-[40px] sm:grid-cols-1 sm:gap-[30px] [&.active]:visible [&.active]:translate-y-0 [&.active]:opacity-100 [&.active]:delay-200"
+            class="item custom-check-field invisible absolute left-0 top-0 grid w-full max-w-[600px] translate-y-[30px] grid-cols-2 gap-[50px] p-[12px] opacity-0 duration-450 md:gap-[40px] sm:grid-cols-1 sm:gap-[30px] [&.active]:visible [&.active]:translate-y-0 [&.active]:opacity-100 [&.active]:delay-200"
           >
             <div
               class="custom-check relative flex h-full w-full"

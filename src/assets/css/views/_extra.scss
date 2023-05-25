@@ -130,6 +130,11 @@
   background-repeat: no-repeat;
   filter: invert(1);
 }
+
+.vti__dropdown-arrow{
+  color: transparent !important;
+}
+
 .vti__dropdown,
 .vti__dropdown-list {
   background-color: var(--color-body-color) !important;
