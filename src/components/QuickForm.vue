@@ -67,11 +67,7 @@ async function submitQuickForm() {
       <h3>Sihirli lambanız yoksa iletişim formunu doldurunuz</h3>
   </div>
 
-  <form @submit.prevent="submitQuickForm" 
-    :class="{
-      'px-12': !props.popup,
-    }"
-    class="w-full">
+  <form @submit.prevent="submitQuickForm" class="w-full px-12">
     <div
       class="form-field mx-auto mt-20 grid max-w-[991px] grid-cols-2 gap-x-[30px] gap-y-[45px] sm:grid-cols-1"
     >
