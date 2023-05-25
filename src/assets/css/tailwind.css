@@ -38,8 +38,12 @@
   @apply !shadow-pink-600 ring-0 ring-offset-0;
 }
 
-
 .error .vti__dropdown,
 .error .vti__dropdown-list {
   @apply !border-pink-600;
+}
+
+.error:focus-within .vti__dropdown,
+.error:focus-within .vti__dropdown-list {
+  @apply !border-none;
 }

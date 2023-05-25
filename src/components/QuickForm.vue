@@ -8,6 +8,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  popup:{
+    type: Boolean,
+    default: false
+  }
 });
 
 const emit = defineEmits(["showSuccess"]);
@@ -44,7 +48,9 @@ async function submitQuickForm() {
 </script>
 
 <template>
-  <article class="container pt-[90px] xl:pt-[30px]">
+  <article 
+    v-if="!props.popup"
+    class="container pt-[90px] xl:pt-[30px]">
     <div class="relative mx-auto w-full max-w-5xl px-[30px] text-center">
       <h1 class="text-4xl font-extralight">Hızlı Teklif Al</h1>
       <p class="mt-10 text-xl font-extralight text-[#6D7E9B]">
@@ -55,7 +61,17 @@ async function submitQuickForm() {
     </div>
   </article>
 
-  <form @submit.prevent="submitQuickForm" class="w-full px-12">
+  <div 
+    v-if="props.popup"
+    class="text-editor w-fit mx-auto relative z-2 !max-w-none mb-[45px]">
+      <h3>Sihirli lambanız yoksa iletişim formunu doldurunuz</h3>
+  </div>
+
+  <form @submit.prevent="submitQuickForm" 
+    :class="{
+      'px-12': !props.popup,
+    }"
+    class="w-full">
     <div
       class="form-field mx-auto mt-20 grid max-w-[991px] grid-cols-2 gap-x-[30px] gap-y-[45px] sm:grid-cols-1"
     >

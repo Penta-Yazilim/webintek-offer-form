@@ -76,7 +76,7 @@ async function submitForm() {
     if (response.status === 422) {
       const { errors } = response.data;
 
-      const step = Object.keys(stepInputs).find((values, key: number) => {
+      let step = Object.keys(stepInputs).find((values, key: number) => {
         return stepInputs[key as keyof typeof stepInputs].some((input) => {
           return errors[input];
         });
@@ -93,6 +93,10 @@ async function submitForm() {
       refSteps.value.steps.setErrors(stepErrors);
 
       if (step) {
+        if(form.for === 'personal' && parseInt(step) === 4){
+          step = '3';
+        }
+
         refSteps.value.steps.go(Number(step));
       }
     }
@@ -666,7 +670,7 @@ setLocations();
 
         <div class="form-el">
           <vue-tel-input
-            :input-options="{ placeholder: '0553  107  93  64' }"
+            :input-options="{ placeholder: '05** *** ** **' }"
             @input="($: any,phoneObject: any|null) => {
             form.phone_number = phoneObject?.number;
           }"

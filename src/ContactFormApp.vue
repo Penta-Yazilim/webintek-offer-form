@@ -108,7 +108,7 @@ const showSuccess = ref(false);
 
         <div class="form-el">
           <vue-tel-input
-            :input-options="{ placeholder: '0553  107  93  64' }"
+            :input-options="{ placeholder: '05** *** ** **' }"
             @input="($: any,phoneObject: any|null) => {
             contactForm.phone_number = phoneObject?.number;
           }"
