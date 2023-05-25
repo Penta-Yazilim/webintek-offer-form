@@ -39,6 +39,9 @@ const form = reactive(
   })
 );
 
+const reset = () => {
+  form.reset();
+};
 
 const stepInputs = {
   0: ["for"],
@@ -670,6 +673,8 @@ setLocations();
 
         <div class="form-el">
           <vue-tel-input
+            :auto-default-country="false"
+            default-country="tr"
             :input-options="{ placeholder: '05** *** ** **' }"
             @input="($: any,phoneObject: any|null) => {
             form.phone_number = phoneObject?.number;

@@ -108,6 +108,8 @@ const showSuccess = ref(false);
 
         <div class="form-el">
           <vue-tel-input
+            :auto-default-country="false"
+            default-country="tr"
             :input-options="{ placeholder: '05** *** ** **' }"
             @input="($: any,phoneObject: any|null) => {
             contactForm.phone_number = phoneObject?.number;
