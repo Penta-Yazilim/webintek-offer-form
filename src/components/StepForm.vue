@@ -554,6 +554,10 @@ setLocations();
               label: 'Fransızca',
               value: 'Fransızca',
             },
+            {
+              label: 'İtalyanca',
+              value: 'İtalyanca',
+            },
           ]"
         />
 

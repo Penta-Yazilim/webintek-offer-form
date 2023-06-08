@@ -110,9 +110,6 @@ async function submitQuickForm() {
 
       <div class="form-el">
         <vue-tel-input
-          :auto-default-country="false"
-          default-country="tr"
-          :input-options="{ placeholder: '05** *** ** **' }"
           v-model="quickForm.phone_number"
           :class="{
             error: quickForm.errors.has('phone_number'),

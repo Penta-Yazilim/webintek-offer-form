@@ -16,6 +16,27 @@ import QuickFormPopup from './QuickFormPopup.vue'
 const telInputOptions = {
 	mode: 'auto',
 	defaultCountry: 'tr',
+	autoDefaultCountry: false,
+	inputOptions:{
+		placeholder: '05** *** ** **',
+	},
+	onlyCountries:[
+		"tr",
+		"az",
+		"ru",
+		"ua",
+		"by",
+		"us",
+		"gb",
+		"de",
+		"fr",
+		"es",
+		"it",
+		"pt",
+		"gr",
+		"nl",
+		"pl",
+	]
 };
 
 
@@ -66,10 +87,10 @@ if (document.getElementById('offer-form-module')) {
 	contactFormApp.mount('#contact-form-module')
 }
 
-if(document.getElementById('quick-form-popup')){
-		const quickFormPopup = createApp(QuickFormPopup);
+// if(document.getElementById('quick-form-popup')){
+// 		const quickFormPopup = createApp(QuickFormPopup);
 
-		// @ts-ignore
-		quickFormPopup.use(VueTelInput, telInputOptions);
-		quickFormPopup.mount('#quick-form-popup')
-}
+// 		// @ts-ignore
+// 		quickFormPopup.use(VueTelInput, telInputOptions);
+// 		quickFormPopup.mount('#quick-form-popup')
+// }
