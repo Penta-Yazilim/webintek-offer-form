@@ -256,9 +256,13 @@ async function submitQuickForm() {
           @click.prevent="() => $emit('back')"
           type="button"
           tabindex="-1"
-          class="prev-step button hover-circle-effect flex-center h-[58px] w-fit rounded-full border-0 bg-ebony-clay-2-900 px-[45px] shadow-[inset_0_0_0_1px_var(--color-ebony-clay-2-900)] [--circle-bg-color:var(--color-lynch-500)] sm:px-[30px]"
+          class="prev-step button hover-circle-effect flex-center h-[58px] w-fit rounded-full border-0 bg-ebony-clay-2-900 px-[45px] shadow-[inset_0_0_0_1px_var(--color-ebony-clay-2-900)] [--circle-bg-color:var(--color-lynch-500)] sm:px-[20px]"
         >
-          <div class="text relative z-10 text-[14px] tracking-widest text-white">
+          <div class="inline-flex items-center text relative z-10 text-[14px] tracking-widest text-white">
+            <svg class="mr-4 -mt-1" width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.6668 5.33306H2.94285L6.47152 1.8044C6.53519 1.7429 6.58598 1.66933 6.62092 1.588C6.65586 1.50666 6.67425 1.41918 6.67502 1.33066C6.67579 1.24214 6.65892 1.15436 6.6254 1.07243C6.59188 0.990495 6.54237 0.91606 6.47978 0.853465C6.41718 0.79087 6.34275 0.741368 6.26082 0.707847C6.17889 0.674327 6.0911 0.657459 6.00258 0.658228C5.91406 0.658998 5.82658 0.677388 5.74525 0.712328C5.66391 0.747267 5.59035 0.798055 5.52885 0.861729L0.862183 5.5284C0.737202 5.65341 0.666992 5.82295 0.666992 5.99973C0.666992 6.1765 0.737202 6.34604 0.862183 6.47106L5.52885 11.1377C5.65458 11.2592 5.82299 11.3264 5.99778 11.3248C6.17258 11.3233 6.33979 11.2532 6.4634 11.1296C6.587 11.006 6.65711 10.8388 6.65863 10.664C6.66015 10.4892 6.59295 10.3208 6.47152 10.1951L2.94285 6.66639H14.6668C14.8437 6.66639 15.0132 6.59616 15.1383 6.47113C15.2633 6.34611 15.3335 6.17654 15.3335 5.99973C15.3335 5.82292 15.2633 5.65335 15.1383 5.52832C15.0132 5.4033 14.8437 5.33306 14.6668 5.33306Z" fill="#5D6676"/>
+            </svg>
+
             Geri
           </div>
           <svg

@@ -253,15 +253,14 @@ const setLocations = async () => {
 const getDistricts = computed(() => {
   return districts.value.filter((district: any) => {
     return (
-      district.il_adi.toLowerCase().replaceAll("i̇", "i") ==
-      form.city.toLowerCase().replaceAll("i̇", "i")
+      district.il_adi.toLocaleLowerCase('tr-TR').replaceAll(["i̇"], ["i"]) ==
+      form.city.toLocaleLowerCase('tr-TR').replaceAll(["i̇"], ["i"])
     );
   });
 });
 
 setLocations();
 </script>
-
 <template>
   <Steps :form="form" @submit="submitForm" ref="refSteps" :inputs="stepInputs" :api-url="props.baseURL">
     <Step :index="0" title="Bu projeyi kimin için yapacağız?" :can-back="canBack" @back="(e) => $emit('back')">
