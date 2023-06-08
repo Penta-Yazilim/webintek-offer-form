@@ -60,7 +60,7 @@ async function submitQuickForm() {
 <template>
   <article 
     v-if="!props.popup"
-    class="container pt-[90px] xl:pt-[30px]">
+    class="container">
     <div class="relative mx-auto w-full max-w-5xl px-[30px] text-center">
       <h1 class="text-4xl font-extralight">Hızlı Teklif Al</h1>
       <p class="mt-10 text-xl font-extralight text-[#6D7E9B]">

@@ -1,5 +1,5 @@
 <template>
-  <article class="form-steps-field pt-[40px] xl:pt-[30px]">
+  <article class="form-steps-field">
     <div class="wrapper relative mx-auto w-full px-[30px]">
       <div
         class="line absolute left-0 top-[50%] h-[1px] w-full translate-y-[-50%] bg-ebony-clay-800 [mask-image:linear-gradient(90deg,transparent,black,transparent)]"

@@ -32,20 +32,20 @@ function backToStart() {
 
 <template>
 
-  <div v-if="!type" class="w-full flex flex-col justify-center items-center overflow-hidden min-h-[calc(100vh-150px)]">
+  <div v-if="!type" class="w-full flex flex-col overflow-hidden min-h-[calc(100vh-150px)]">
     <TypeSelect v-model="type" />
   </div>
 
-  <div v-show="type === 'quickly'" class="w-full flex flex-col justify-center items-center overflow-hidden min-h-[calc(100vh-150px)]">
+  <div v-show="type === 'quickly'" class="w-full flex flex-col overflow-hidden min-h-[calc(100vh-150px)]">
     <QuickForm :baseURL="baseURL" @show-success="showSuccess" ref="quickForm" can-back @back="backToStart"/>
   </div>
 
-  <div v-if="type === 'project'" class="w-full flex flex-col justify-center items-center overflow-hidden min-h-[calc(100vh-150px)]">
+  <div v-if="type === 'project'" class="w-full flex flex-col overflow-hidden min-h-[calc(100vh-150px)]">
     <StepForm :baseURL="baseURL" @show-success="showSuccess" ref="stepForm" can-back @back="backToStart"/>
   </div>
 
   <Transition name="fade" mode="out-in">
-    <div v-if="type === 'success'" class="w-full flex flex-col justify-center items-center overflow-hidden min-h-[calc(100vh-150px)]">
+    <div v-if="type === 'success'" class="w-full flex flex-col overflow-hidden min-h-[calc(100vh-150px)]">
       <SuccessMessage />
     </div>
   </Transition>
