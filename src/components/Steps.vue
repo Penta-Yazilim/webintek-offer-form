@@ -1,5 +1,5 @@
 <template>
-  <article class="form-steps-field pt-[90px] xl:pt-[30px]">
+  <article class="form-steps-field pt-[40px] xl:pt-[30px]">
     <div class="wrapper relative mx-auto w-full px-[30px]">
       <div
         class="line absolute left-0 top-[50%] h-[1px] w-full translate-y-[-50%] bg-ebony-clay-800 [mask-image:linear-gradient(90deg,transparent,black,transparent)]"
@@ -44,7 +44,7 @@
   </article>
 
   <article
-    class="form-content pt-[90px] pb-20 xl:pt-[75px] lg:pt-[60px] md:pt-[45px]"
+    class="form-content pt-[40px] pb-20 xl:pt-[75px] lg:pt-[60px] md:pt-[45px] w-full"
   >
     <div class="wrapper relative mx-auto max-w-[991px] px-[30px]">
       <form @submit.prevent="$emit('submit')" class="w-full">
@@ -142,7 +142,7 @@ const steps: Steps = reactive({
     });
   },
   prevStep: () => {
-    steps.value = steps.value === 1 ? steps.value : --steps.value;
+    steps.value = steps.value === 0 ? steps.value : --steps.value;
 
     nextTick(() => {
       setHeight();

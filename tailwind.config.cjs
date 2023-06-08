@@ -212,7 +212,11 @@ module.exports = {
               ? extractColorVars(value, `-${colorKey}`)
               : {};
 
-          return { ...vars, ...newVars };
+          return { 
+            ...vars, 
+            ...newVars,
+            '--color-back-button': '#222834'
+          };
         }, {});
       }
 
