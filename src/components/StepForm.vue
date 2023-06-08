@@ -713,10 +713,7 @@ setLocations();
 
         <div class="form-el">
           <vue-tel-input
-            :auto-default-country="false"
-            default-country="tr"
-            :input-options="{ placeholder: '05** *** ** **' }"
-            @input="($: any,phoneObject: any|null) => {form.phone_number = phoneObject?.number;}"
+            v-model="form.phone_number"
             :class="{
               error: form.errors.has('phone_number'),
             }"
