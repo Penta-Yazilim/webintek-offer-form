@@ -39,6 +39,9 @@ module.exports = {
       primary: ["Plus Jakarta Sans", "sans-serif"],
     },
     extend: {
+      opacity:{
+        75: "0.75",
+      },
       transitionDuration: {
         350: "350ms",
         450: "450ms",

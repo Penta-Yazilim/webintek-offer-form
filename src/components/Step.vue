@@ -6,7 +6,7 @@
     :id="`step-${stepNumber + 1}`"
     class="step pointer-events-none invisible absolute left-0 top-0 w-full translate-y-[30px] opacity-0 duration-450 [&.active]:pointer-events-auto [&.active]:visible [&.active]:translate-y-0 [&.active]:opacity-100 [&.active]:delay-200"
   >
-    <div class="text-editor z-2 relative mx-auto mb-[60px] w-full text-center">
+    <div class="text-4xl z-2 relative mx-auto mb-[30px] w-full text-center">
       <h1>
         {{ title }}
       </h1>

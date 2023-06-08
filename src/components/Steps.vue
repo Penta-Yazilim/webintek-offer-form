@@ -46,7 +46,7 @@
   <article
     class="form-content pt-[40px] pb-20 xl:pt-[75px] lg:pt-[60px] md:pt-[45px] w-full"
   >
-    <div class="wrapper relative mx-auto max-w-[991px] px-[30px]">
+    <div class="wrapper relative mx-auto max-w-[1506px] px-[30px]">
       <form @submit.prevent="$emit('submit')" class="w-full">
         <div class="steps relative duration-600">
           <slot></slot>
