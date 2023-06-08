@@ -5,7 +5,7 @@ import StepForm from "@/components/StepForm.vue";
 import SuccessMessage from "@/components/SuccessMessage.vue";
 import TypeSelect from "@/components/TypeSelect.vue";
 
-const type = ref("project");
+const type = ref("");
 
 const quickForm = ref(null);
 const stepForm = ref(null);
