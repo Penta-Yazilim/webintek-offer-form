@@ -393,7 +393,9 @@ setLocations();
                     class="hidden" 
                   />
 
-                  {{ service.title }}
+                  <span class="flex-1 pr-5 whitespace-pre-wrap">
+                    {{ service.title }}
+                  </span>
 
                   <svg 
                     :class="{'!block': form._services.includes(service.title)}"
@@ -428,7 +430,9 @@ setLocations();
                     class="hidden" 
                   />
 
-                  {{ service.title }}
+                  <span class="flex-1 pr-4">
+                    {{ service.title }}
+                  </span>
 
                   <svg 
                     :class="{'!block': form._services.includes(service.title)}"
@@ -466,7 +470,9 @@ setLocations();
                     class="hidden" 
                   />
 
-                  {{ service.title }}
+                  <span class="flex-1 pr-4">
+                    {{ service.title }}
+                  </span>
 
                   <svg 
                     :class="{'!block': form._services.includes(service.title)}" 

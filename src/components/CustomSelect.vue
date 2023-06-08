@@ -45,15 +45,22 @@ const showOptions = ref(false);
 const selectInput = ref<HTMLInputElement | null>(null);
 const selectedOptions = ref<Option[]>([]);
 const placeholderVal = computed(() => {
+  let stringVal: any = "";
+
   if (props.multiple) {
-    return selectedOptions.value.length > 0
+    stringVal = selectedOptions.value.length > 0
       ? selectedOptions.value.map((opt) => opt.label).join(", ")
       : props.placeholder;
   } else {
-    return selectedOptions.value.length > 0
-      ? props.modelValue
-      : props.placeholder;
+    stringVal = selectedOptions.value.length > 0 ? props.modelValue : props.placeholder;
   }
+
+  if(typeof stringVal === "string") {
+    // Trim comma from start and end
+    return stringVal.replace(/^,|,$/g, "");
+  }
+
+  return stringVal;
 });
 
 onMounted(() => {
@@ -88,7 +95,7 @@ function selectOption(option: Option) {
 
     emit(
       "update:model-value",
-      selectedOptions.value.map((opt) => opt.value)
+      selectedOptions.value.filter((opt) => opt.value).map((opt) => opt.value)
     );
   } else {
     selectedOptions.value = [option];
@@ -142,8 +149,8 @@ function isSelected(option: Option) {
         </div>
       </div>
       <div
-        :class="{ hidden: !showOptions }"
-        class="options absolute left-0 top-full z-30 max-h-[135px] w-full overflow-y-auto overflow-x-hidden bg-body-color shadow-[0_0_0_1px_var(--color-lynch-800)]"
+        :class="{ '!block': showOptions }"
+        class="hidden options absolute left-0 top-full z-30 max-h-[135px] w-full overflow-y-auto overflow-x-hidden bg-body-color shadow-[0_0_0_1px_var(--color-lynch-800)]"
       >
         <div
           v-for="option in options"

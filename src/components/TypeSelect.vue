@@ -10,9 +10,9 @@
     </div>
 
     <div
-      class="mx-auto mt-20 flex w-full max-w-3xl flex-row items-center gap-20 sm:flex-col"
+      class="mx-auto mt-20 sm:mt-10 flex w-full max-w-3xl flex-row items-center gap-20 sm:gap-10 sm:flex-col"
     >
-      <div class="custom-check relative h-[300px] w-[400px]">
+      <div class="custom-check relative h-[300px] w-[400px] xs:h-auto xs:w-auto">
         <input
           class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
           type="radio"
@@ -52,7 +52,7 @@
           </svg>
         </div>
       </div>
-      <div class="custom-check relative h-[300px] w-[400px]">
+      <div class="custom-check relative h-[300px] w-[400px] xs:h-auto xs:w-auto">
         <input
           class="peer absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
           type="radio"
