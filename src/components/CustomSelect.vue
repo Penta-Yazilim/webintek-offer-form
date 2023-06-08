@@ -75,7 +75,12 @@ onMounted(() => {
   }
 });
 
-function toggleOptions() {
+function toggleOptions(e: MouseEvent) {
+  if(!showOptions.value){
+    selectInput.value?.blur();
+    window.focus();
+  }
+
   showOptions.value = !showOptions.value;
 }
 
@@ -115,9 +120,9 @@ function isSelected(option: Option) {
   <div class="form-el" v-click-outside="() => (showOptions = false)">
     <select
       :id="id"
-      class="peer absolute left-0 top-0 z-10 h-full w-full !cursor-pointer opacity-0"
+      class="peer absolute left-0 top-0 z-10 h-full w-full !cursor-pointer opacity-0 appearance-none"
       ref="selectInput"
-      @click="toggleOptions"
+      @click.prevent="toggleOptions"
       multiple
       :required="required"
     >

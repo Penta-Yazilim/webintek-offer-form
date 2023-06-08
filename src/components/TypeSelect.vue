@@ -1,6 +1,6 @@
 <template>
   <article class="container">
-    <div class="relative mx-auto w-full max-w-5xl px-[30px] text-center">
+    <div class="relative mx-auto w-full max-w-5x text-center">
       <h1 class="text-4xl font-extralight">Size Nasıl Yardımcı Olabiliriz?</h1>
       <p class="mt-10 text-xl font-extralight text-[#6D7E9B]">
         Etkileyici, kullanışlı, benzersiz, her zaman modern projeler üretiyoruz.
@@ -10,7 +10,7 @@
     </div>
 
     <div
-      class="mx-auto mt-20 sm:mt-10 flex w-full max-w-3xl flex-row items-center gap-20 sm:gap-10 sm:flex-col"
+      class="mx-auto mt-20 sm:mt-10 flex w-full max-w-3xl flex-row items-center gap-20 sm:gap-10 sm:flex-col xs:pb-10"
     >
       <div class="custom-check relative h-[300px] w-[400px] xs:h-auto xs:w-auto">
         <input
