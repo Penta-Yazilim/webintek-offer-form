@@ -216,7 +216,7 @@ const showSuccess = ref(false);
           <div
             class="text relative z-10 text-[14px] tracking-widest text-white"
           >
-            GÖNDER
+            Gönder
           </div>
           <svg
             v-if="contactForm.processing"

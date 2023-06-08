@@ -245,7 +245,7 @@ setLocations();
 </script>
 
 <template>
-  <Steps :form="form" @submit="submitForm" ref="refSteps" :inputs="stepInputs" :api-url="props.baseURL">
+  <Steps :start="1" :form="form" @submit="submitForm" ref="refSteps" :inputs="stepInputs" :api-url="props.baseURL">
     <Step :index="0" title="Bu projeyi kimin için yapacağız?" :can-back="canBack" @back="(e) => $emit('back')">
       <div
         class="custom-check-field mx-auto grid max-w-[600px] grid-cols-2 gap-[50px] md:gap-[40px] sm:grid-cols-1 sm:gap-[30px]"
@@ -523,6 +523,34 @@ setLocations();
             {
               label: 'Türkçe',
               value: 'Türkçe',
+            },
+            {
+              label: 'Almanca',
+              value: 'Almanca',
+            },
+            {
+              label: 'Arapça',
+              value: 'Arapça',
+            },
+            {
+              label: 'Rusça',
+              value: 'Rusça',
+            },
+            {
+              label: 'İspanyolca',
+              value: 'İspanyolca',
+            },
+            {
+              label: 'Farsça',
+              value: 'Farsça',
+            },
+            {
+              label: 'Portekizce',
+              value: 'Portekizce',
+            },
+            {
+              label: 'Fransızca',
+              value: 'Fransızca',
             },
           ]"
         />

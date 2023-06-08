@@ -27,8 +27,8 @@
         class="prev-step button hover-circle-effect flex-center h-[58px] w-fit rounded-full border-0 bg-ebony-clay-2-900 px-[45px] shadow-[inset_0_0_0_1px_var(--color-ebony-clay-2-900)] [--circle-bg-color:var(--color-lynch-500)] sm:px-[30px]"
       >
         <div class="text relative z-10 text-[14px] tracking-widest text-white">
-          <template v-if="props.canBack"> GERİ DÖN </template>
-          <template v-else> GERİ </template>
+          <template v-if="props.canBack"> Geri Dön </template>
+          <template v-else> Geri </template>
         </div>
         <svg
           v-if="loaders.prev"
@@ -59,7 +59,7 @@
         class="next-step button hover-circle-effect flex-center h-[58px] w-fit rounded-full bg-dull-lavender-500 px-[60px] shadow-[inset_0_0_0_1px_var(--color-dull-lavender-500)] [--circle-bg-color:var(--color-chetwode-blue-600)] md:px-[45px] sm:px-[30px]"
       >
         <div class="text relative z-10 text-[14px] tracking-widest text-white">
-          DEVAM ET
+          Devam Et
         </div>
         <svg
           v-if="loaders.next"
@@ -90,7 +90,7 @@
         class="next-step button hover-circle-effect flex-center h-[58px] w-fit rounded-full bg-dull-lavender-500 px-[60px] shadow-[inset_0_0_0_1px_var(--color-dull-lavender-500)] [--circle-bg-color:var(--color-chetwode-blue-600)] md:px-[45px] sm:px-[30px]"
       >
         <div class="text relative z-10 text-[14px] tracking-widest text-white">
-          GÖNDER
+          Gönder
         </div>
         <svg
           v-if="loaders.next"
