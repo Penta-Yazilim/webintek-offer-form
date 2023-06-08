@@ -7,17 +7,23 @@ import { createApp } from 'vue'
 import './assets/css/style.scss'
 import './assets/css/tailwind.css'
 // @ts-ignore
-import VueTelInput from 'vue3-tel-input'
-import 'vue3-tel-input/dist/vue3-tel-input.css'
+import VueTelInput from 'vue-tel-input';
+import 'vue-tel-input/vue-tel-input.css';
 import App from './App.vue'
 import ContactFormApp from './ContactFormApp.vue'
 import QuickFormPopup from './QuickFormPopup.vue'
+
+const telInputOptions = {
+	mode: 'auto',
+	defaultCountry: 'tr',
+};
 
 
 if (document.getElementById('offer-form-module')) {
 	const app = createApp(App);
 	
-	app.use(VueTelInput);
+	// @ts-ignore
+	app.use(VueTelInput, telInputOptions);
 	
 	// Make a directive to handle the click outside of the element by typescript
 	app.directive('click-outside', {
@@ -55,13 +61,15 @@ if (document.getElementById('offer-form-module')) {
 } else if (document.getElementById('contact-form-module')) {
 	const contactFormApp = createApp(ContactFormApp);
 
-	contactFormApp.use(VueTelInput);
+	// @ts-ignore
+	contactFormApp.use(VueTelInput, telInputOptions);
 	contactFormApp.mount('#contact-form-module')
 }
 
 if(document.getElementById('quick-form-popup')){
 		const quickFormPopup = createApp(QuickFormPopup);
 
-		quickFormPopup.use(VueTelInput);
+		// @ts-ignore
+		quickFormPopup.use(VueTelInput, telInputOptions);
 		quickFormPopup.mount('#quick-form-popup')
 }

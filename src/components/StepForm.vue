@@ -712,9 +712,7 @@ setLocations();
             :auto-default-country="false"
             default-country="tr"
             :input-options="{ placeholder: '05** *** ** **' }"
-            @input="($: any,phoneObject: any|null) => {
-            form.phone_number = phoneObject?.number;
-          }"
+            @input="($: any,phoneObject: any|null) => {form.phone_number = phoneObject?.number;}"
             :class="{
               error: form.errors.has('phone_number'),
             }"

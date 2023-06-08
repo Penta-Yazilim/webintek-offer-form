@@ -113,9 +113,7 @@ async function submitQuickForm() {
           :auto-default-country="false"
           default-country="tr"
           :input-options="{ placeholder: '05** *** ** **' }"
-          @input="($: any,phoneObject: any|null) => {
-            quickForm.phone_number = phoneObject?.number;
-          }"
+          v-model="quickForm.phone_number"
           :class="{
             error: quickForm.errors.has('phone_number'),
           }"
@@ -259,7 +257,8 @@ async function submitQuickForm() {
         <button
           v-if="canBack"
           @click.prevent="() => $emit('back')"
-          type="submit"
+          type="button"
+          tabindex="-1"
           class="prev-step button hover-circle-effect flex-center h-[58px] w-fit rounded-full border-0 bg-ebony-clay-2-900 px-[45px] shadow-[inset_0_0_0_1px_var(--color-ebony-clay-2-900)] [--circle-bg-color:var(--color-lynch-500)] sm:px-[30px]"
         >
           <div class="text relative z-10 text-[14px] tracking-widest text-white">
