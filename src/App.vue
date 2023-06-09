@@ -4,7 +4,7 @@ import QuickForm from "@/components/QuickForm.vue";
 import StepForm from "@/components/StepForm.vue";
 import TypeSelect from "@/components/TypeSelect.vue";
 
-const type = ref("project");
+const type = ref("");
 
 const quickForm = ref(null);
 const stepForm = ref(null);
