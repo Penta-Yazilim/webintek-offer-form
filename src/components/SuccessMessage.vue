@@ -50,7 +50,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="sm:pt-10 container flex h-full flex-col items-center justify-center pb-20"
+    class="sm:pt-30 container flex h-full flex-col items-center justify-center pt-52 pb-20"
   >
     <svg
       width="180"
