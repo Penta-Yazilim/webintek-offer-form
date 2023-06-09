@@ -2,7 +2,7 @@
   <article class="container">
     <div class="relative mx-auto w-full max-w-5x text-center">
       <h1 class="text-4xl font-extralight">Size Nasıl Yardımcı Olabiliriz?</h1>
-      <p class="mt-10 text-xl font-extralight text-[#6D7E9B]">
+      <p class="mt-10 text-xl font-extralight text-[#6D7E9B] max-w-3xl mx-auto">
         Etkileyici, kullanışlı, benzersiz, her zaman modern projeler üretiyoruz.
         Dijital dünyadaki görsel şovlarda ne yapılması gerektiğini çok iyi
         biliyoruz. Müşterilerimizi çok iyi dinliyor.

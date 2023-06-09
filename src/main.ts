@@ -12,6 +12,7 @@ import 'vue-tel-input/vue-tel-input.css';
 import App from './App.vue'
 import ContactFormApp from './ContactFormApp.vue'
 import QuickFormPopup from './QuickFormPopup.vue'
+import SuccessMessage from './components/SuccessMessage.vue';
 
 const telInputOptions = {
 	mode: 'auto',
@@ -85,6 +86,9 @@ if (document.getElementById('offer-form-module')) {
 	// @ts-ignore
 	contactFormApp.use(VueTelInput, telInputOptions);
 	contactFormApp.mount('#contact-form-module')
+}else if (document.getElementById('success-message')){
+	const successMessage = createApp(SuccessMessage);
+	successMessage.mount('#success-message');
 }
 
 if(document.getElementById('quick-form-popup')){

@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import QuickForm from "@/components/QuickForm.vue";
 import StepForm from "@/components/StepForm.vue";
-import SuccessMessage from "@/components/SuccessMessage.vue";
 import TypeSelect from "@/components/TypeSelect.vue";
 
 const type = ref("");
@@ -17,7 +16,7 @@ const baseURL =
     : "//destek.webintek.com.tr/api";
 
 function showSuccess() {
-  type.value = "success";
+  window.location.href = "/tesekkurler";
 }
 
 function backToStart() {
@@ -43,12 +42,6 @@ function backToStart() {
   <div v-if="type === 'project'" class="w-full flex flex-col justify-center items-center overflow-hidden min-h-[calc(100vh-150px)]">
     <StepForm :baseURL="baseURL" @show-success="showSuccess" ref="stepForm" can-back @back="backToStart"/>
   </div>
-
-  <Transition name="fade" mode="out-in">
-    <div v-if="type === 'success'" class="w-full flex flex-col justify-center items-center overflow-hidden min-h-[calc(100vh-150px)]">
-      <SuccessMessage />
-    </div>
-  </Transition>
 </template>
 
 <style>

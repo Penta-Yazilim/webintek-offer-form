@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import QuickForm from "@/components/QuickForm.vue";
-import SuccessMessage from "@/components/SuccessMessage.vue";
 
 const type = ref("quickly");
 
@@ -12,7 +11,7 @@ const baseURL =
     : "//destek.webintek.com.tr/api";
 
 function showSuccess() {
-  type.value = "success";
+  window.location.href = "/tesekkurler";
 }
 </script>
 
@@ -20,12 +19,6 @@ function showSuccess() {
   <Transition name="fade" mode="out-in">
     <div v-show="type === 'quickly'" class="w-full overflow-hidden">
       <QuickForm :baseURL="baseURL" @show-success="showSuccess" popup />
-    </div>
-  </Transition>
-
-  <Transition name="fade" mode="out-in">
-    <div v-if="type === 'success'" class="w-full overflow-hidden">
-      <SuccessMessage />
     </div>
   </Transition>
 </template>
