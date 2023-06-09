@@ -4,7 +4,7 @@ import QuickForm from "@/components/QuickForm.vue";
 import StepForm from "@/components/StepForm.vue";
 import TypeSelect from "@/components/TypeSelect.vue";
 
-const type = ref("");
+const type = ref("project");
 
 const quickForm = ref(null);
 const stepForm = ref(null);
@@ -30,7 +30,6 @@ function backToStart() {
 </script>
 
 <template>
-
   <div v-if="!type" class="w-full flex flex-col justify-center items-center overflow-hidden min-h-[calc(100vh-150px)]">
     <TypeSelect v-model="type" />
   </div>

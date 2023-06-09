@@ -262,7 +262,7 @@ const getDistricts = computed(() => {
 setLocations();
 </script>
 <template>
-  <Steps :form="form" @submit="submitForm" ref="refSteps" :inputs="stepInputs" :api-url="props.baseURL">
+  <Steps :start="1" :form="form" @submit="submitForm" ref="refSteps" :inputs="stepInputs" :api-url="props.baseURL">
     <Step :index="0" title="Bu projeyi kimin için yapacağız?" :can-back="canBack" @back="(e) => $emit('back')">
       <div
         class="custom-check-field mx-auto grid max-w-[600px] grid-cols-2 gap-[50px] md:gap-[40px] sm:grid-cols-1 sm:gap-[30px]"
@@ -288,7 +288,7 @@ setLocations();
               />
             </div>
             <div
-              class="text-editor text-center editor-p:text-[14px] editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
+              class="text-editor text-center editor-p:text-[14px] editor-headings:text-[22px] editor-headings:mb-2 editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
             >
               <h3>Şirketim İçin</h3>
               <p>Web tasarım ihtiyacınız için seçebilirsiniz.</p>
@@ -326,7 +326,7 @@ setLocations();
               />
             </div>
             <div
-              class="text-editor text-center editor-p:text-[14px] editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
+              class="text-editor text-center editor-p:text-[14px] editor-headings:text-[22px] editor-headings:mb-2 editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
             >
               <h3>Şahsım İçin</h3>
               <p>Online pazarda ürünlerinizi satmak istiyorsanız seçiniz.</p>
@@ -382,24 +382,45 @@ setLocations();
             </div>
 
             <ul class="py-4 flex flex-col font-light text-lg text-white">
-              <li v-for="(service,i) in webServices" :key="i">
-                <label class="flex items-center w-full py-4 rounded-xl hover:bg-[#222834] px-8 cursor-pointer" :for="`web-service-${i}`">
-                  <input
-                    type="checkbox"
-                    v-model="form._services"
-                    :id="`web-service-${i}`"
-                    :value="service.title"
-                    class="hidden" 
-                  />
-
+              <li v-for="(service,i) in webServices" :key="`web-service-${i}`">
+                <label class="group flex items-center w-full py-3 rounded-xl hover:bg-[#222834] px-8 cursor-pointer pointer-events-auto" :for="`web-service-${i}`">
                   <span class="flex-1 pr-5 whitespace-pre-wrap">
                     {{ service.title }}
                   </span>
 
+                  <input
+                    type="checkbox"
+                    class="hidden"
+                    v-model="form._services"
+                    :id="`web-service-${i}`"
+                    :value="service.title"
+                  />
+
                   <svg 
-                    :class="{'!block': form._services.includes(service.title)}"
-                    class="ml-auto hidden" width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12.1454 0.777344L5.01224 7.39485L1.99556 4.17555L0 6.0455L4.8736 11.2465L14 2.78764L12.1454 0.777344Z" fill="#606ECD"/>
+                    :class="{
+                      'hidden': form._services.includes(service.title),
+                      'block': !form._services.includes(service.title)
+                    }"
+                    class="border border-transparent hover:border-white rounded"
+                    width="23" height="24" viewBox="0 0 23 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="23" height="24" rx="5" fill="#222834"/>
+                  </svg>
+
+                  <svg 
+                    :class="{
+                      'hidden': !form._services.includes(service.title),
+                      'block': form._services.includes(service.title)
+                    }"
+                    width="23" height="24" viewBox="0 0 23 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="23" height="24" rx="5" fill="#606ECD"/>
+                    <g clip-path="url(#clip0_1431_2359)">
+                    <path d="M17.1454 6.77734L10.0122 13.3949L6.99556 10.1756L5 12.0455L9.8736 17.2465L19 8.78764L17.1454 6.77734Z" fill="white"/>
+                    </g>
+                    <defs>
+                    <clipPath id="clip0_1431_2359">
+                    <rect width="14" height="14" fill="white" transform="translate(5 5)"/>
+                    </clipPath>
+                    </defs>
                   </svg>
                 </label>
               </li>
@@ -420,7 +441,7 @@ setLocations();
 
             <ul class="py-4 flex flex-col font-light text-lg text-white">
               <li v-for="(service,i) in digitalMarketing" :key="i">
-                <label class="flex items-center w-full py-4 rounded-xl hover:bg-[#222834] px-8 cursor-pointer" :for="`digital-market-${i}`">
+                <label class="flex items-center w-full py-3 rounded-xl hover:bg-[#222834] px-8 cursor-pointer" :for="`digital-market-${i}`">
                   <input
                     type="checkbox"
                     v-model="form._services"
@@ -434,9 +455,30 @@ setLocations();
                   </span>
 
                   <svg 
-                    :class="{'!block': form._services.includes(service.title)}"
-                    class="ml-auto hidden" width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12.1454 0.777344L5.01224 7.39485L1.99556 4.17555L0 6.0455L4.8736 11.2465L14 2.78764L12.1454 0.777344Z" fill="#606ECD"/>
+                    :class="{
+                      'hidden': form._services.includes(service.title),
+                      'block': !form._services.includes(service.title)
+                    }"
+                    class="border border-transparent hover:border-white rounded"
+                    width="23" height="24" viewBox="0 0 23 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="23" height="24" rx="5" fill="#222834"/>
+                  </svg>
+
+                  <svg 
+                    :class="{
+                      'hidden': !form._services.includes(service.title),
+                      'block': form._services.includes(service.title)
+                    }"
+                    width="23" height="24" viewBox="0 0 23 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="23" height="24" rx="5" fill="#606ECD"/>
+                    <g clip-path="url(#clip0_1431_2359)">
+                    <path d="M17.1454 6.77734L10.0122 13.3949L6.99556 10.1756L5 12.0455L9.8736 17.2465L19 8.78764L17.1454 6.77734Z" fill="white"/>
+                    </g>
+                    <defs>
+                    <clipPath id="clip0_1431_2359">
+                    <rect width="14" height="14" fill="white" transform="translate(5 5)"/>
+                    </clipPath>
+                    </defs>
                   </svg>
                 </label>
               </li>
@@ -460,7 +502,7 @@ setLocations();
 
             <ul class="py-4 flex flex-col font-light text-lg text-white">
               <li v-for="(service,i) in corporateIdentity" :key="i">
-                <label class="flex items-center w-full py-4 rounded-xl hover:bg-[#222834] px-8 cursor-pointer" :for="`ci-${i}`">
+                <label class="flex items-center w-full py-3 rounded-xl hover:bg-[#222834] px-8 cursor-pointer" :for="`ci-${i}`">
                   <input
                     type="checkbox"
                     v-model="form._services"
@@ -474,9 +516,30 @@ setLocations();
                   </span>
 
                   <svg 
-                    :class="{'!block': form._services.includes(service.title)}" 
-                    class="ml-auto hidden" width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12.1454 0.777344L5.01224 7.39485L1.99556 4.17555L0 6.0455L4.8736 11.2465L14 2.78764L12.1454 0.777344Z" fill="#606ECD"/>
+                    :class="{
+                      'hidden': form._services.includes(service.title),
+                      'block': !form._services.includes(service.title)
+                    }"
+                    class="border border-transparent hover:border-white rounded"
+                    width="23" height="24" viewBox="0 0 23 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="23" height="24" rx="5" fill="#222834"/>
+                  </svg>
+
+                  <svg 
+                    :class="{
+                      'hidden': !form._services.includes(service.title),
+                      'block': form._services.includes(service.title)
+                    }"
+                    width="23" height="24" viewBox="0 0 23 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="23" height="24" rx="5" fill="#606ECD"/>
+                    <g clip-path="url(#clip0_1431_2359)">
+                    <path d="M17.1454 6.77734L10.0122 13.3949L6.99556 10.1756L5 12.0455L9.8736 17.2465L19 8.78764L17.1454 6.77734Z" fill="white"/>
+                    </g>
+                    <defs>
+                    <clipPath id="clip0_1431_2359">
+                    <rect width="14" height="14" fill="white" transform="translate(5 5)"/>
+                    </clipPath>
+                    </defs>
                   </svg>
                 </label>
               </li>
