@@ -288,7 +288,7 @@ setLocations();
               />
             </div>
             <div
-              class="text-editor text-center editor-p:text-[14px] editor-headings:text-[22px] editor-headings:mb-2 editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
+              class="text-editor text-center editor-p:text-[14px] editor-headings:!text-[22px] editor-headings:mb-2 editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
             >
               <h3>Şirketim İçin</h3>
               <p>Web tasarım ihtiyacınız için seçebilirsiniz.</p>
@@ -326,7 +326,7 @@ setLocations();
               />
             </div>
             <div
-              class="text-editor text-center editor-p:text-[14px] editor-headings:text-[22px] editor-headings:mb-2 editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
+              class="text-editor text-center editor-p:text-[14px] editor-headings:!text-[22px] editor-headings:mb-2 editor-p:leading-normal [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
             >
               <h3>Şahsım İçin</h3>
               <p>Online pazarda ürünlerinizi satmak istiyorsanız seçiniz.</p>
